@@ -1,0 +1,6 @@
+main:
+	call initialization functions
+	any additional setup
+	enter infinite loop
+	
+edge ISR:
