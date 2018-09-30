@@ -1,0 +1,4 @@
+helpful tips:
+-make sure in project->properties->c/c++ Build->settings the include paths are set to workspace "inc" folder, and make sure
+	each header in "inc" is listed in the "include files"
+-for some reason, to get a program to run, i have to run in debug, then let the program run from there. Maybe you have to do this too?

@@ -5,3 +5,9 @@
  * @brief Main driver for CE4951 Milestone 1.
  */
 
+int main() {
+	//enable clocks for gpio a
+	//PA13, 14, 15
+
+	while(1);
+}
