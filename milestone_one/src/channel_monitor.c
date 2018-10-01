@@ -21,12 +21,6 @@ void channel_monitor_init()
 	clear_idle();
 	clear_busy();
 	clear_collision();
-	set_idle();
-	clear_idle();
-	set_busy();
-	clear_busy();
-	set_collision();
-	clear_collision();
 }
 
 void set_idle()
