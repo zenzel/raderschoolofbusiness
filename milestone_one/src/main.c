@@ -10,8 +10,10 @@
 int main() {
 	//enable clocks for gpio a
 	//PA13, 14, 15
+	//interrupt NVIC pg 234
 
 	channel_monitor_init();
+
 
 	while(1);
 }
