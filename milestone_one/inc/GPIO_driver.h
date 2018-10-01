@@ -54,6 +54,7 @@ GPIOA->MODER = ...
 
 #define GPIOC_PUPDR (volatile uint32_t*) 0x4002080C
 #define GPIOB_AFRL (volatile uint32_t*) 0x40020420
+#define GPIOB_AFRH (volatile uint32_t*) 0x40020424
 
 #define LED_A_OUTPUT 0x00554000
 #define LED_B_OUTPUT 0x05150000

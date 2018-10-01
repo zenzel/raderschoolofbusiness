@@ -17,6 +17,8 @@ void timer_12_init()
 	*(RCC_APB1ENR) |= 1 << TIM12_APB1ENR;
 	//enable alternate function mode for TIM12 pin PB14
 	mode_select(GPIOB_MODER, AF, PB14);
+	//slect alternate function
+	*(GPIOB_AFRH) |= (0b1001 << 24);
 	//set IC1 on TI1
 		//pg 608
 		//clear IC1
@@ -42,4 +44,6 @@ void timer_12_init()
 	//set timer to auto-reload at 111. we configured a reload to trigger
 	//an interrupt letting us know the timer has expired when the timer reloads
 	*(TIM12_ARR) = 0x006F;
+	//enable the timer
+	*(TIM12_CR1) |= 1;
 }
