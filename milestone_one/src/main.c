@@ -9,11 +9,6 @@
 #include "channel_monitor.h"
 #include "timer_12.h"
 
-//0 = idle
-//1 = busy
-//2 = collision
-volatile uint8_t channel_status;
-
 int main() {
 
 	channel_monitor_init();

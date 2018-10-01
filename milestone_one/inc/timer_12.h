@@ -24,6 +24,7 @@
 #define NVIC_ISER1 (volatile uint32_t*) 0xE000E104
 #define TIM12_APB1ENR 6
 #define PB14 14
+#define PB13 13
 
 //initialize timer 12
 void timer_12_init();

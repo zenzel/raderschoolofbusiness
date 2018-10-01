@@ -10,6 +10,14 @@
 
 #include <inttypes.h>
 
+//0 = idle
+//1 = busy
+//2 = collision
+volatile uint8_t channel_status;
+//0 = logic 0
+//1 = logic 1
+volatile uint16_t Tx_line;
+
 //initialize the channel monitor
 //-enable clocks for GPIOA
 void channel_monitor_init();

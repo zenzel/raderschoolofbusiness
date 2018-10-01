@@ -8,6 +8,14 @@
 #include "timer_12.h"
 #include "GPIO_driver.h"
 
+//initializes timer 12 to the required needs of the channel monitor.
+//That it, TIM12 is configured for input capture on dual edges.
+//Because the capture is on dual edges and wee need to know the
+//logic level of the data pulses. See pg 181 for why we are lucky!
+//Even though PB14 is in alternate function mode, it's input is still
+//stored in the GPIO_IDR. This means we can capture on both edges
+//and still be able to find out what voltage we are at.
+//This voltage checking will be taken care of in the TIM12 IRQHandler
 void timer_12_init()
 {
 	//GPIO INITS
@@ -44,6 +52,9 @@ void timer_12_init()
 	//set timer to auto-reload at 111. we configured a reload to trigger
 	//an interrupt letting us know the timer has expired when the timer reloads
 	*(TIM12_ARR) = 0x006F;
-	//enable the timer
-	*(TIM12_CR1) |= 1;
+	//enable the timer.
+	//set the timer to generate update IRQ's only when
+	//the the timer auto-updates, and not when it is
+	//reset by the program.
+	*(TIM12_CR1) |= 0b101;
 }
