@@ -30,5 +30,7 @@ void timer_12_init()
 	//enable interrupt requests
 		//pg 604
 	*(TIM12_DIER) |= 0b10;
+	//enable the ISR in the NVIC
+	*(NVIC_ISER1) |= 0x800
 
 }
