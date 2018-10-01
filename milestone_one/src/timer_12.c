@@ -27,10 +27,19 @@ void timer_12_init()
 	//enable input capture
 		//pg 611
 	*(TIM12_CCER) |= 0b1011;
-	//enable interrupt requests
+	//enable interrupt requests for input capture
+	//enable interrupt requests for reloads (time out)
 		//pg 604
-	*(TIM12_DIER) |= 0b10;
+	*(TIM12_DIER) |= 0b11;
 	//enable the ISR in the NVIC
-	*(NVIC_ISER1) |= 0x800
-
+	*(NVIC_ISER1) |= 0x800;
+	//set pre-scaler to 160. With a 16MHz clock, this gives a count period
+	//of 10 uS. Documentation for Channel Monitor specifies timeout at
+	//1.11 ms, or 1110 uS. A timer period of 10 uS gives us the necessary precision
+	//to meet the timing requirement.
+	//note that the pre-scale value is PSC+1, so we load 159 instead of 160.
+	*(TIM12_PSC) = 0x009F;
+	//set timer to auto-reload at 111. we configured a reload to trigger
+	//an interrupt letting us know the timer has expired when the timer reloads
+	*(TIM12_ARR) = 0x006F;
 }

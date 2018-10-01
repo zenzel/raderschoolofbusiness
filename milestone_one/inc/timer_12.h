@@ -15,8 +15,10 @@
 #define TIM12_CCMR1 (volatile uint32_t*) 0x40001818
 #define TIM12_CCER (volatile uint32_t*) 0x40001820
 #define TIM12_DIER (volatile uint32_t*) 0x4000180C
-#define NVIC_BASE (volatile uint32_t) 0xE000E100
-#define NVIC_ISER1 (volatile uint32_t) 0xE000E104
+#define TIM12_PSC (volatile uint32_t*) 0x40001828
+#define TIM12_ARR (volatile uint32_t*) 0x4000182C
+#define NVIC_BASE (volatile uint32_t*) 0xE000E100
+#define NVIC_ISER1 (volatile uint32_t*) 0xE000E104
 #define TIM12_APB1ENR 6
 #define PB14 14
 
