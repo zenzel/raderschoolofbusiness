@@ -6,3 +6,6 @@ helpful tips:
 	page 35 for Nucleo-F446RE pinout. Specifically, to find where pins PA10, PA11, and PA12 are.
 -DONT use ppins PA13,14, or 15. These are used by debugging and will suck your time away because you CANT EVEN DEBUG your problem!
 	-see page 1288 of STM32F446* Reference Manual for documentation of these debuggin pins
+447Hz is 50% duty cycle failure frequency
+663Hz is 75% duty cycle idle frequency
+665Hz is 25% duty cycle collision frequency

@@ -23,6 +23,10 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		//clear interrupt flag
 		*(TIM12_SR) &= 0xFFFD;
 
+		channel_status = 1; //busy
+		*(GPIOA_BSRR) = 1 << PA11; // set yellow LED
+		*(GPIOA_BSRR) = 1 << (PA10 + 16); //clear green LED
+		*(GPIOA_BSRR) = 1 << (PA12 + 16); //clear red LED
 		//we are going to reset the timer, but this would cause an update event
 		//which would cause this IRQHandler to be called again. We don't want that
 		//so we will tell the timer not to create an update event, then reset, then
