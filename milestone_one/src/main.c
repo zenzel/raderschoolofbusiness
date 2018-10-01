@@ -5,9 +5,13 @@
  * @brief Main driver for CE4951 Milestone 1.
  */
 
+#include "channel_monitor.h"
+
 int main() {
 	//enable clocks for gpio a
 	//PA13, 14, 15
+
+	channel_monitor_init();
 
 	while(1);
 }

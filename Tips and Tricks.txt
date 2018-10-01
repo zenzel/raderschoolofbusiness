@@ -2,3 +2,7 @@ helpful tips:
 -make sure in project->properties->c/c++ Build->settings the include paths are set to workspace "inc" folder, and make sure
 	each header in "inc" is listed in the "include files"
 -for some reason, to get a program to run, i have to run in debug, then let the program run from there. Maybe you have to do this too?
+- go to: https://www.st.com/content/ccc/resource/technical/document/user_manual/98/2e/fa/4b/e0/82/43/b7/DM00105823.pdf/files/DM00105823.pdf/jcr:content/translations/en.DM00105823.pdf
+	page 35 for Nucleo-F446RE pinout. Specifically, to find where pins PA10, PA11, and PA12 are.
+-DONT use ppins PA13,14, or 15. These are used by debugging and will suck your time away because you CANT EVEN DEBUG your problem!
+	-see page 1288 of STM32F446* Reference Manual for documentation of these debuggin pins
