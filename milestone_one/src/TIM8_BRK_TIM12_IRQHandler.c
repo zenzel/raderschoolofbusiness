@@ -16,33 +16,8 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 	//read in the whole thing
 		//see pg 605
 	volatile uint16_t status = *(TIM12_SR);
-	//we will check for an edge first since that is more likely during transmission.
-	//doing this first might save us some cycles in the long run.
-	if((status & 0b10) == 0b10)
-	{
-		//clear interrupt flag
-		*(TIM12_SR) &= 0xFFFD;
-
-		channel_status = 1; //busy
-		*(GPIOA_BSRR) = 1 << PA11; // set yellow LED
-		*(GPIOA_BSRR) = 1 << (PA10 + 16); //clear green LED
-		*(GPIOA_BSRR) = 1 << (PA12 + 16); //clear red LED
-		//we are going to reset the timer, but this would cause an update event
-		//which would cause this IRQHandler to be called again. We don't want that
-		//so we will tell the timer not to create an update event, then reset, then
-		//enable update events when we are done.
-		//There is a bit in TIM12_CR1 which disables update IRQ's from software resets.
-		//Setting this bit is a much better solution.
-			//see pg 601
-		//disable update events
-		//*(TIM12_CR1) |= 0b10;
-		//reset timer
-		*(TIM12_EGR) |= 1;
-		//enable update events
-		//*(TIM12_CR1) &= 0xFFFD;
-	}
 	//check if the timer expired
-	else if((status & 0b1) == 0b1)
+	if((status & 0b1) == 0b1)
 	{
 		//clear interrupt flag
 		*(TIM12_SR) &= 0xFFFE;
@@ -74,5 +49,28 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 
 		//reset timer
 		*(TIM12_EGR) |= 1;
+	}
+	else if((status & 0b10) == 0b10)
+	{
+		//clear interrupt flag
+		*(TIM12_SR) &= 0xFFFD;
+
+		channel_status = 1; //busy
+		*(GPIOA_BSRR) = 1 << PA11; // set yellow LED
+		*(GPIOA_BSRR) = 1 << (PA10 + 16); //clear green LED
+		*(GPIOA_BSRR) = 1 << (PA12 + 16); //clear red LED
+		//we are going to reset the timer, but this would cause an update event
+		//which would cause this IRQHandler to be called again. We don't want that
+		//so we will tell the timer not to create an update event, then reset, then
+		//enable update events when we are done.
+		//There is a bit in TIM12_CR1 which disables update IRQ's from software resets.
+		//Setting this bit is a much better solution.
+			//see pg 601
+		//disable update events
+		//*(TIM12_CR1) |= 0b10;
+		//reset timer
+		*(TIM12_EGR) |= 1;
+		//enable update events
+		//*(TIM12_CR1) &= 0xFFFD;
 	}
 }
