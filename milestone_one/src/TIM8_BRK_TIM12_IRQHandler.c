@@ -28,10 +28,10 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 	//, so we check immediately and hope to see only one of the
 	//interrupts pending in the TIM12_SR.
 	volatile uint16_t status = *(TIM12_SR );
-	//volatile uint16_t Tx_line;
 	//check to see if interrupt was caused by an edge
 	if ((status & 0b10))
 	{
+		//read the Tx line and record the value for the time-out interrupt
 		Tx_line1 = *(GPIOB_IDR ) & (1 << 14);
 		//clear interrupt flag.
 		*(TIM12_SR ) &= 0xFFFD;
