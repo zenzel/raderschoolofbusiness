@@ -48,10 +48,11 @@ void timer_12_init()
 	//1.11 ms, or 1110 uS. A timer period of 10 uS gives us the necessary precision
 	//to meet the timing requirement.
 	//note that the pre-scale value is PSC+1, so we load 159 instead of 160.
-	*(TIM12_PSC) = 0x009F;
+	//*(TIM12_PSC) = 0x009F;
 	//set timer to auto-reload at 111. we configured a reload to trigger
 	//an interrupt letting us know the timer has expired when the timer reloads
-	*(TIM12_ARR) = 0x006F;
+	//*(TIM12_ARR) = 0x006F;
+	*(TIM12_ARR) = 0x4560;
 	//enable the timer.
 	//set the timer to generate update IRQ's only when
 	//the the timer auto-updates, and not when it is

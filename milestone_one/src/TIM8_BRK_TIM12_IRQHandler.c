@@ -8,69 +8,69 @@
 #include <inttypes.h>
 #include "channel_monitor.h"
 
+static uint16_t Tx_line1;
+
 extern void TIM8_BRK_TIM12_IRQHandler()
 {
+	//reset timer.
+	//we do this before anything to avoid a race condition.
+	//there are two cases:
+	//The timer could expire immediately before an edge, in which
+	//case we would be resetting the timer within microseconds,
+	//or the timer could expire immediately after an edge, in which case
+	//we want the timer reset ASAP to narrow the window for a interrupt
+	//race condition.
+	*(TIM12_EGR ) |= 1;
 	//we either got here from a detected edge or a counter reset.
 	//we need to determine which one happened.
-	//the status register clears when it is read, so we can't check bit by bit. we have to
-	//read in the whole thing
-		//see pg 605
-	volatile uint16_t status = *(TIM12_SR);
-	//check if the timer expired
-	if((status & 0b1) == 0b1)
+	//we also need to avoid a race condition between the
+	//interrupts, which can happen at a specific frequency
+	//, so we check immediately and hope to see only one of the
+	//interrupts pending in the TIM12_SR.
+	volatile uint16_t status = *(TIM12_SR );
+	//volatile uint16_t Tx_line;
+	//check to see if interrupt was caused by an edge
+	if ((status & 0b10))
+	{
+		Tx_line1 = *(GPIOB_IDR ) & (1 << 14);
+		//clear interrupt flag.
+		*(TIM12_SR ) &= 0xFFFD;
+		//set state to BUSY
+		channel_status = 1;
+		//set yellow LED and clear all others. the compiler/optimizer will make this look nice.
+		*(GPIOA_BSRR ) = (1 << PA11) | (1 << (PA10 + 16)) | (1 << (PA12 + 16));
+		//clear interrupt flag.
+		*(TIM12_SR ) &= 0xFFFC; //CRITICAL ADDITION
+		*(NVIC_ICPR1) &= ~0x0800; //CRITICAL ADDITION
+	}
+	//check if timer expired, then check if line is high or low to determine if idle or collision
+	else if ((status & 0b1))
 	{
 		//clear interrupt flag
-		*(TIM12_SR) &= 0xFFFE;
-
-		//get Tx value
-		//if Tx is high, Tx_line will not equal 0.
-		//if Tx is low, Tx_line will equal 0.
-		Tx_line = *(GPIOB_IDR) & (1<<14);
-
-		//timer expired, so check if line is high or low to determine if idle or collision
-		//then take appropriate action
-		if(Tx_line == 0)
+		*(TIM12_SR ) &= 0xFFFE;
+		//if data is high
+		if (!Tx_line1)
 		{
-			channel_status = 2; //collision
-			//we could call out set_collision() function,
-			//but that would create function overhead in the ISR
-			*(GPIOA_BSRR) = 1 << PA12; // set red LED
-			*(GPIOA_BSRR) = 1 << (PA11 + 16); //clear yellow LED
-			*(GPIOA_BSRR) = 1 << (PA10 + 16); //clear green LED
+			if (channel_status != 0)
+			{
+				//set state to COLLISION
+				channel_status = 2;
+				//set red LED and clear others
+				*(GPIOA_BSRR ) = (1 << PA12) | (1 << (PA11 + 16))
+						| (1 << (PA10 + 16));
+			}
 		}
 		else
 		{
-			channel_status = 0; //idle
-			*(GPIOA_BSRR) = 1 << PA10; //set green LED
-			*(GPIOA_BSRR) = 1 << (PA11 + 16); //clear yellow LED
-			*(GPIOA_BSRR) = 1 << (PA12 + 16); //clear red LED
-
+			if(channel_status != 2)
+			{
+				//set state to IDLE
+				channel_status = 0;
+				//set green LED and clear others
+				*(GPIOA_BSRR ) = (1 << PA10) | (1 << (PA11 + 16))
+						| (1 << (PA12 + 16));
+			}
 		}
-
-		//reset timer
-		*(TIM12_EGR) |= 1;
 	}
-	else if((status & 0b10) == 0b10)
-	{
-		//clear interrupt flag
-		*(TIM12_SR) &= 0xFFFD;
 
-		channel_status = 1; //busy
-		*(GPIOA_BSRR) = 1 << PA11; // set yellow LED
-		*(GPIOA_BSRR) = 1 << (PA10 + 16); //clear green LED
-		*(GPIOA_BSRR) = 1 << (PA12 + 16); //clear red LED
-		//we are going to reset the timer, but this would cause an update event
-		//which would cause this IRQHandler to be called again. We don't want that
-		//so we will tell the timer not to create an update event, then reset, then
-		//enable update events when we are done.
-		//There is a bit in TIM12_CR1 which disables update IRQ's from software resets.
-		//Setting this bit is a much better solution.
-			//see pg 601
-		//disable update events
-		//*(TIM12_CR1) |= 0b10;
-		//reset timer
-		*(TIM12_EGR) |= 1;
-		//enable update events
-		//*(TIM12_CR1) &= 0xFFFD;
-	}
 }

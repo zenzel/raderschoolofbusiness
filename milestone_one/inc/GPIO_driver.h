@@ -74,6 +74,14 @@ GPIOA->MODER = ...
 #define B12 1<<12
 #define B13 1<<13
 
+#define NVIC_ICPR0 (volatile uint32_t*) 0xE000E280
+#define NVIC_ICPR1 (volatile uint32_t*) 0xE000E284
+#define NVIC_ICPR2 (volatile uint32_t*) 0xE000E288
+
+#define NVIC_ICER0 (volatile uint32_t*) 0xE000E180
+#define NVIC_ICER1 (volatile uint32_t*) 0xE000E184
+#define NVIC_ICER2 (volatile uint32_t*) 0xE000E188
+
 extern void clock_init(uint8_t);
 extern void mode_select(volatile uint32_t*, uint8_t, uint16_t);
 
