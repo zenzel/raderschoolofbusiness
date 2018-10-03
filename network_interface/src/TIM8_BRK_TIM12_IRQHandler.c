@@ -36,7 +36,7 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		//clear interrupt flag.
 		*(TIM12_SR ) &= 0xFFFD;
 		//set state to BUSY
-		channel_status = 1;
+		channel_status = BUSY;
 		//set yellow LED and clear all others. the compiler/optimizer will make this look nice.
 		*(GPIOA_BSRR ) = (1 << PA11) | (1 << (PA10 + 16)) | (1 << (PA12 + 16));
 		//clear interrupt flag.
@@ -51,10 +51,10 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		//if data is high
 		if (!Tx_line1)
 		{
-			if (channel_status != 0)
+			if (channel_status != IDLE)
 			{
 				//set state to COLLISION
-				channel_status = 2;
+				channel_status = COLLISION;
 				//set red LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA12) | (1 << (PA11 + 16))
 						| (1 << (PA10 + 16));
@@ -62,10 +62,10 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		}
 		else
 		{
-			if(channel_status != 2)
+			if(channel_status != COLLISION)
 			{
 				//set state to IDLE
-				channel_status = 0;
+				channel_status = IDLE;
 				//set green LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA10) | (1 << (PA11 + 16))
 						| (1 << (PA12 + 16));

@@ -13,6 +13,10 @@
 //0 = idle
 //1 = busy
 //2 = collision
+#define IDLE 0
+#define BUSY 1
+#define COLLISION 2
+
 volatile uint8_t channel_status;
 //0 = logic 0
 //1 = logic 1
