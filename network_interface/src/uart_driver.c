@@ -51,11 +51,12 @@ char usart2_getch() {
 	//callback for echo
 	usart2_putch(c);
 
+	//not needed for now
 	// If character is CR
-	if (c == '\r') {
+	/*if (c == '\r') {
 		usart2_putch('\n');  // send it
 		c = '\n';   // Return LF. fgets is terminated by LF
-	}
+	}*/
 
 	return c;
 }
