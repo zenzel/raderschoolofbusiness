@@ -8,11 +8,13 @@
 #include <inttypes.h>
 #include "channel_monitor.h"
 #include "timer_12.h"
+#include "uart_driver.h"
 
 int main() {
 
 	channel_monitor_init();
 	timer_12_init();
+	usart2_init(DEFAULT_BAUD, F_CPU);
 
 	while(1);
 }
