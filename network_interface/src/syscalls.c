@@ -59,6 +59,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <timers.h>
 
 #include "uart_driver.h"
 

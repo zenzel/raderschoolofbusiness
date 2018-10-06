@@ -1,4 +1,5 @@
 /*
+#include <timers.h>
  * timer_12.h
  *
  *  Created on: Sep 30, 2018
@@ -27,6 +28,14 @@
 #define TIM6_CNT (volatile uint32_t*) 0x40001024
 #define TIM6_PSC (volatile uint32_t*) 0x40001028
 #define TIM6_ARR (volatile uint32_t*) 0x4000102C
+#define TIM6_APB1ENR 4
+
+#define TIM6_URS 2
+#define TIM6_CEN 0
+#define TIM6_UIE 0
+
+#define BITRATE_PSC 3999
+#define BITRATE_RELOAD 2
 
 //TIM7
 #define TIM7_BASE (volatile uint32_t*) 0x40001400
@@ -38,7 +47,7 @@
 #define TIM7_CNT (volatile uint32_t*) 0x40001424
 #define TIM7_PSC (volatile uint32_t*) 0x40001428
 #define TIM7_ARR (volatile uint32_t*) 0x4000142C
-
+#define TIM7_APB1ENR 5
 
 //TIM12
 #define TIM12_BASE (volatile uint32_t*) 0x40001800
@@ -59,4 +68,7 @@
 //initialize timer 12
 void timer_12_init();
 
-#endif /* TIMER_12_H_ */
+//initialize timer 6
+void timer_6_init();
+
+#endif /* TIMERS_H_ */

@@ -6,15 +6,18 @@
  */
 
 #include <inttypes.h>
+#include <timers.h>
+#include <timers.h>
 #include "channel_monitor.h"
-#include "timer_12.h"
 #include "uart_driver.h"
+#include "tx.h"
 
 int main() {
 
 	channel_monitor_init();
 	timer_12_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
+	tx_get_input();
 
 	while(1);
 }

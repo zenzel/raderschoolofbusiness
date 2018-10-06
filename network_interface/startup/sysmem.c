@@ -48,6 +48,7 @@
 /* Includes */
 #include <errno.h>
 #include <stdio.h>
+#include <timers.h>
 
 /* Variables */
 extern int errno;

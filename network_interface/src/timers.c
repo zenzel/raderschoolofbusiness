@@ -1,12 +1,37 @@
 /*
- * timer_12.c
  *
  *  Created on: Sep 30, 2018
  *      Author: micha
  */
 
-#include "timer_12.h"
+#include "timers.h"
 #include "GPIO_driver.h"
+
+
+
+void timer_6_init() {
+	//enable timer clock
+	*(RCC_APB1ENR) |= (1 << TIM6_APB1ENR);
+
+	//set the update event source to overflow only
+	*(TIM6_CR1) |= (1 << TIM6_URS);
+
+	//enable interrupt
+	*(TIM6_DIER) |= (1 << TIM6_UIE);
+
+	//16,000,000 clocks per second
+	//want 2000 events per second
+	//so we prescale by 4000 (3999)
+	//results in 4000 counts per second
+	//reload register is 2
+
+	//set the prescale register to give a clock of 4000Hz
+	*(TIM6_PSC) = BITRATE_PSC;
+
+	//set the reload register to count of 2
+	*(TIM6_ARR) = BITRATE_RELOAD;
+}
+
 
 //initializes timer 12 to the required needs of the channel monitor.
 //That it, TIM12 is configured for input capture on dual edges.

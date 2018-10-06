@@ -6,6 +6,7 @@
  */
 
 #include <inttypes.h>
+#include <timers.h>
 #include "channel_monitor.h"
 
 static uint16_t Tx_line1;

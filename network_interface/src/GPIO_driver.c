@@ -8,6 +8,7 @@
  */
 
 #include <stdio.h>
+#include <timers.h>
 #include "GPIO_driver.h"
 
 /*

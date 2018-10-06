@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <inttypes.h>
+#include "timers.h"
 #include "uart_driver.h"
 #include "GPIO_driver.h"
 

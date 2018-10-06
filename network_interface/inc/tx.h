@@ -8,19 +8,26 @@
 #ifndef TX_H_
 #define TX_H_
 
+#include <stdbool.h>
+
 //temporary size of character buffer
 #define BUFFER_SIZE 5
 
 //TODO find what the enter key returns on our hardware
-#define ENTER_PRESS 13
+#define ENTER_PRESS "\n"
+
+
 
 //holds characters to transmit
 char char_buffer[BUFFER_SIZE];
 
-//holds encoded bits to transmit
-uint32_t tx_buffer[(sizeof(char) * BUFFER_SIZE) * 2]; //doubled size for manchester
+//holds the breakout of bits from transmit characters
+bool tx_buffer[(sizeof(char)) * BUFFER_SIZE];
 
-void tx_get_input();
+//holds the transmit count
+int tx_count = 0;
+
+uint8_t tx_get_input();
 void tx();
 
 #endif /* TX_H_ */
