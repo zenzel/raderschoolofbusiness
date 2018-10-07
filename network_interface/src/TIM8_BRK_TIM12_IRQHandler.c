@@ -33,7 +33,7 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 	if ((status & 0b10))
 	{
 		//read the Tx line and record the value for the time-out interrupt
-		Tx_line1 = *(GPIOB_IDR ) & (1 << 14);
+		Tx_line1 = *(GPIOB_IDR ) & (1 << PB14);
 		//clear interrupt flag.
 		*(TIM12_SR ) &= 0xFFFD;
 		//set state to BUSY

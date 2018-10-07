@@ -48,5 +48,6 @@ void clear_collision();
 #define PA11 11
 #define PA12 12
 
-
+#define PB14 14
+#define PB15 15
 #endif /* CHANNEL_MONITOR_H_ */

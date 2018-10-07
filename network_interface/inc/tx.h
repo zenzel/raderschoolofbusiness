@@ -14,9 +14,10 @@
 #define BUFFER_SIZE 5
 
 //TODO find what the enter key returns on our hardware
-#define ENTER_PRESS "\n"
+#define ENTER_PRESS '\n'
 
-
+//holds number of bytes actually selected to be sent
+uint8_t bytes;
 
 //holds characters to transmit
 char char_buffer[BUFFER_SIZE];
@@ -25,9 +26,10 @@ char char_buffer[BUFFER_SIZE];
 bool tx_buffer[(sizeof(char)) * BUFFER_SIZE];
 
 //holds the transmit count
-int tx_count = 0;
+int tx_count;
 
 uint8_t tx_get_input();
 void tx();
+void encode();
 
 #endif /* TX_H_ */

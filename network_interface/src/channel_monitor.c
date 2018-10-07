@@ -3,6 +3,7 @@
 #include <timers.h>
 #include "GPIO_driver.h"
 #include "channel_monitor.h"
+
 /*
  * Initializers.
  */
