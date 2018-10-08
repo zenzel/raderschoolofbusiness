@@ -36,7 +36,7 @@ void encode() {
 	//adds to transmit buffer accordingly
 	int idx = 0;
 	for (int i = 0; i < bytes; i++) {
-		for (int j = 0; j < 8; j++) {
+		for (int j = 7; j >= 0; j--) {
 			//invert for first half of bit period
 			tx_buffer[idx] = (~((char_buffer[i] & (1 << j)) >> j)) & 0b1;
 			//transition during second half of bit period
@@ -47,10 +47,6 @@ void encode() {
 }
 
 void tx() {
-	//enable GPIOB PB15 for transmit
-	clock_init(GPIOB);
-	mode_select(GPIOB_MODER, OUT, PB15);
-
 	//make sure count is at 0
 	tx_count = 0;
 
@@ -61,16 +57,21 @@ void tx() {
 extern void TIM6_DAC_IRQHandler() {
 	//if collision is detected, halt the timer
 
-if (channel_status == COLLISION) {
-	*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
-} else if (tx_count < (bytes * sizeof(char) *2)) {
-	//here we set the BSRR to whatever is in the tx register
-	*(GPIOB_BSRR) = (1 << (PB15 + 16)) | (tx_buffer[tx_count++] << PB15);
-	//this works, right?
-} else if (tx_count == (bytes * sizeof(char) *2)) {
-	//turn off TIM6 because we are done transmitting
-	*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
-}
-*(TIM6_SR ) &= 0xFFFE;
-
+	if (channel_status == COLLISION) {
+		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+	} else if (tx_count < (bytes * CHAR_SIZE * 2)) {
+		//here we set the BSRR to whatever is in the tx register
+		//*(GPIOB_BSRR) = (1 << (PB15 + 16)) | (tx_buffer[tx_count++] << PB15);
+		if (tx_buffer[tx_count]) {
+			*(GPIOB_BSRR) = 1 << PB15;
+		}
+		else {
+			*(GPIOB_BSRR) = 1 << (PB15 + 16);
+		}
+		tx_count++;
+	} else if (tx_count == (bytes * CHAR_SIZE * 2)) {
+		//turn off TIM6 because we are done transmitting
+		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+	}
+	*(TIM6_SR ) &= 0xFFFE;
 }

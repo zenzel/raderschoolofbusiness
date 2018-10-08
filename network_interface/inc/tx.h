@@ -13,17 +13,19 @@
 //temporary size of character buffer
 #define BUFFER_SIZE 5
 
+#define CHAR_SIZE 8
+
 //TODO find what the enter key returns on our hardware
 #define ENTER_PRESS '\n'
 
 //holds number of bytes actually selected to be sent
-uint8_t bytes;
+volatile uint8_t bytes;
 
 //holds characters to transmit
 char char_buffer[BUFFER_SIZE];
 
 //holds the breakout of bits from transmit characters
-bool tx_buffer[(sizeof(char)) * BUFFER_SIZE * 2];
+bool tx_buffer[CHAR_SIZE * BUFFER_SIZE * 2];
 
 //holds the transmit count
 int tx_count;

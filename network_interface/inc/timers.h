@@ -34,7 +34,7 @@
 #define TIM6_CEN 0
 #define TIM6_UIE 0
 
-#define BITRATE_PSC 3999
+#define BITRATE_PSC 2673
 #define BITRATE_RELOAD 2
 
 //TIM7

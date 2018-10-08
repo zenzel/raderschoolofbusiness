@@ -46,9 +46,14 @@ void timer_6_init() {
 //This voltage checking will be taken care of in the TIM12 IRQHandler
 void timer_12_init()
 {
+	//PUPDR???
+	//enable GPIOB PB15 for transmit
+	clock_init(GPIOB);
+	mode_select(GPIOB_MODER, OUT, PB15);
+	*(GPIOB_BSRR ) = (1 << PB15);
 	//GPIO INITS
 	//enable clock for GPIOB
-	clock_init(GPIOB);
+	//clock_init(GPIOB);
 	//enable timer 12
 	*(RCC_APB1ENR) |= 1 << TIM12_APB1ENR;
 	//enable alternate function mode for TIM12 pin PB14
