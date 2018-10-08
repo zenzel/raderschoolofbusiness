@@ -30,6 +30,9 @@ void timer_6_init() {
 
 	//set the reload register to count of 2
 	*(TIM6_ARR) = BITRATE_RELOAD;
+
+	//TIM6 is #54 in NVIC
+	*(NVIC_ISER1) |= 1 << 22;
 }
 
 
@@ -67,7 +70,7 @@ void timer_12_init()
 		//pg 604
 	*(TIM12_DIER) |= 0b11;
 	//enable the ISR in the NVIC
-	*(NVIC_ISER1) |= 0x800;
+	*(NVIC_ISER1) |= 1 << 11; //0x800
 	//set pre-scaler to 160. With a 16MHz clock, this gives a count period
 	//of 10 uS. Documentation for Channel Monitor specifies timeout at
 	//1.11 ms, or 1110 uS. A timer period of 10 uS gives us the necessary precision

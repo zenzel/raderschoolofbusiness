@@ -16,6 +16,7 @@ int main() {
 
 	channel_monitor_init();
 	timer_12_init();
+	timer_6_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
 	tx_get_input();
 

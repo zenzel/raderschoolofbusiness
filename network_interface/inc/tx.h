@@ -23,7 +23,7 @@ uint8_t bytes;
 char char_buffer[BUFFER_SIZE];
 
 //holds the breakout of bits from transmit characters
-bool tx_buffer[(sizeof(char)) * BUFFER_SIZE];
+bool tx_buffer[(sizeof(char)) * BUFFER_SIZE * 2];
 
 //holds the transmit count
 int tx_count;
