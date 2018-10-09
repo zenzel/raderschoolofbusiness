@@ -33,5 +33,6 @@ int tx_count;
 uint8_t tx_get_input();
 void tx();
 void encode();
+void collision_test();
 
 #endif /* TX_H_ */

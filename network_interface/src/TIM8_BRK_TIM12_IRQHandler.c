@@ -9,8 +9,6 @@
 #include <timers.h>
 #include "channel_monitor.h"
 
-static uint16_t Tx_line1;
-
 extern void TIM8_BRK_TIM12_IRQHandler()
 {
 	//reset timer.
@@ -52,25 +50,25 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		//if data is high
 		if (!Tx_line1)
 		{
-			if (channel_status != IDLE)
-			{
+			//if (channel_status != IDLE)
+			//{
 				//set state to COLLISION
 				channel_status = COLLISION;
 				//set red LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA12) | (1 << (PA11 + 16))
 						| (1 << (PA10 + 16));
-			}
+			//}
 		}
 		else
 		{
-			if(channel_status != COLLISION)
-			{
+			//if(channel_status != COLLISION)
+			//{
 				//set state to IDLE
 				channel_status = IDLE;
 				//set green LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA10) | (1 << (PA11 + 16))
 						| (1 << (PA12 + 16));
-			}
+			//}
 		}
 	}
 

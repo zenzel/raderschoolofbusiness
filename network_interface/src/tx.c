@@ -54,11 +54,29 @@ void tx() {
 	*(TIM6_CR1 ) |= (1 << TIM6_CEN);
 }
 
+//repeatedly send data so we can test collision stopping
+void collision_test()
+{
+	tx_count = 0;
+	//enable the transmit timer
+	*(TIM6_CR1 ) |= (1 << TIM6_CEN);
+	while(1)
+	{
+		if(tx_count == (bytes * CHAR_SIZE * 2))
+		{
+			tx_count = 0;
+			//enable the transmit timer
+			*(TIM6_CR1 ) |= (1 << TIM6_CEN);
+		}
+	}
+}
+
 extern void TIM6_DAC_IRQHandler() {
 	//if collision is detected, halt the timer
 
 	if (channel_status == COLLISION) {
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+		*(GPIOB_BSRR) = 1 << PB15;
 	} else if (tx_count < (bytes * CHAR_SIZE * 2)) {
 		//here we set the BSRR to whatever is in the tx register
 		//*(GPIOB_BSRR) = (1 << (PB15 + 16)) | (tx_buffer[tx_count++] << PB15);
@@ -72,6 +90,7 @@ extern void TIM6_DAC_IRQHandler() {
 	} else if (tx_count == (bytes * CHAR_SIZE * 2)) {
 		//turn off TIM6 because we are done transmitting
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+		*(GPIOB_BSRR) = 1 << PB15;
 	}
 	*(TIM6_SR ) &= 0xFFFE;
 }
