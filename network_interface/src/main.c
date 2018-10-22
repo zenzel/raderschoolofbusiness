@@ -19,6 +19,7 @@ int main() {
 	timer_6_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
 	tx_get_input();
+	collision_test();
 
 	while(1);
 }

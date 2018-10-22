@@ -91,4 +91,6 @@ void timer_12_init()
 	//the the timer auto-updates, and not when it is
 	//reset by the program.
 	*(TIM12_CR1) |= 0b101;
+	//read the Tx line and record the value for initialization
+	Tx_line1 = *(GPIOB_IDR ) & (1 << PB14);
 }
