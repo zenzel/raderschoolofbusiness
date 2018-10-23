@@ -8,6 +8,23 @@
 #include "GPIO_driver.h"
 
 
+void systick_init() {
+
+}
+
+void timer_7_init() {
+	//enable timer clock
+	*(RCC_APB1ENR) |= (1 << TIM7_APB1ENR);
+
+	//set the update event to overflow only
+	*(TIM7_CR1) |= (1 << TIM7_URS);
+
+	//enable interrupt
+	*(TIM7_DIER) |= (1 << TIM7_URS);
+
+	//TIM6 is #55 in NVIC
+	*(NVIC_ISER1) |= 1 << TIM7_ISER_EN;
+}
 
 void timer_6_init() {
 	//enable timer clock
@@ -32,7 +49,7 @@ void timer_6_init() {
 	*(TIM6_ARR) = BITRATE_RELOAD;
 
 	//TIM6 is #54 in NVIC
-	*(NVIC_ISER1) |= 1 << 22;
+	*(NVIC_ISER1) |= (1 << TIM6_ISER_EN);
 }
 
 

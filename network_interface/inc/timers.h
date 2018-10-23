@@ -18,6 +18,15 @@
 #define NVIC_BASE (volatile uint32_t*) 0xE000E100
 #define NVIC_ISER1 (volatile uint32_t*) 0xE000E104
 
+//systick
+#define STK_CTRL (volatile uint32_t*) 0xE000E010
+#define STK_LOAD (volatile uint32_t*) 0xE000E014
+#define STK_VAL (volatile uint32_t*) 0xE000E014
+#define STK_ENABLE 0
+#define STK_CLKSRC 2
+#define STK_COUNT 16
+uint32_t systick_period;
+
 //TIM6
 #define TIM6_BASE (volatile uint32_t*) 0x40001000
 #define TIM6_CR1 (volatile uint32_t*) 0x40001000
@@ -33,6 +42,7 @@
 #define TIM6_URS 2
 #define TIM6_CEN 0
 #define TIM6_UIE 0
+#define TIM6_ISER_EN 22
 
 #define BITRATE_PSC 2673
 #define BITRATE_RELOAD 2
@@ -49,10 +59,18 @@
 #define TIM7_ARR (volatile uint32_t*) 0x4000142C
 #define TIM7_APB1ENR 5
 
+#define TIM7_URS 2
+#define TIM7_CEN 0
+#define TIM7_UIE 0
+#define TIM7_ISER_EN 23
+
+uint32_t tim7_bitrate_psc;
+
 //TIM12
 #define TIM12_BASE (volatile uint32_t*) 0x40001800
 #define TIM12_CR1 (volatile uint32_t*) 0x40001800
 #define TIM12_CCMR1 (volatile uint32_t*) 0x40001818
+#define TIM12_CCR1 (volatile uint32_t*) 0x40001834
 #define TIM12_CCER (volatile uint32_t*) 0x40001820
 #define TIM12_DIER (volatile uint32_t*) 0x4000180C
 #define TIM12_PSC (volatile uint32_t*) 0x40001828
@@ -70,5 +88,11 @@ void timer_12_init();
 
 //initialize timer 6
 void timer_6_init();
+
+//initialize timer 7
+void timer_7_init();
+
+//initialize systick
+void systick_init();
 
 #endif /* TIMERS_H_ */

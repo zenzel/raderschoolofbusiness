@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <timers.h>
 #include "channel_monitor.h"
+#include "rx.h"
 
 extern void TIM8_BRK_TIM12_IRQHandler()
 {
@@ -41,7 +42,23 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		//clear interrupt flag.
 		*(TIM12_SR ) &= 0xFFFC; //CRITICAL ADDITION
 		*(NVIC_ICPR1) &= ~0x0800; //CRITICAL ADDITION
+
+		//calibrates the receiver clock
+		if(counted_edges < 8) {
+			if(counted_edges) {
+				edge_delta_sum += *(TIM12_CCR1);
+				counted_edges++;
+			}
+		} else if(counted_edges == 8) {
+			bitrate = (edge_delta_sum/7);
+			bitrate_fourth = bitrate/4;
+			*(TIM7_ARR) = bitrate;
+			//enable
+			*(TIM7_CR1) |= (1 << TIM7_CEN);
+			counted_edges++;
+		}
 	}
+
 	//check if timer expired, then check if line is high or low to determine if idle or collision
 	else if ((status & 0b1))
 	{
@@ -65,6 +82,10 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 			//{
 				//set state to IDLE
 				channel_status = IDLE;
+
+				//set the edge calibrate high for next rx event
+				counted_edges = 0;
+
 				//set green LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA10) | (1 << (PA11 + 16))
 						| (1 << (PA12 + 16));

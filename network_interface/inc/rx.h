@@ -8,6 +8,9 @@
 #ifndef RX_H_
 #define RX_H_
 
-
+uint8_t counted_edges;
+uint32_t edge_delta_sum;
+uint32_t bitrate;
+uint32_t bitrate_fourth;
 
 #endif /* RX_H_ */
