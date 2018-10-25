@@ -23,8 +23,19 @@ void SysTick_Handler(void) {
 	//sample the line
 	rx_buffer[bit_count] = *(GPIOB_IDR) & (1 << PB14);
 	bit_count++;
-
-	if(bit_count == 240) {
+	//if we read in the length field
+	if(bit_count == 32)
+	{
+		length |= rx_buffer[24] << 0;
+		length |= rx_buffer[25] << 1;
+		length |= rx_buffer[26] << 2;
+		length |= rx_buffer[27] << 3;
+		length |= rx_buffer[28] << 4;
+		length |= rx_buffer[29] << 5;
+		length |= rx_buffer[30] << 6;
+		length |= rx_buffer[31] << 7;
+	}
+	if(bit_count == length) {
 		//disable timer 7
 		*(TIM7_CR1) &= ~(1 << TIM7_CEN);
 		parse_flag = 1;
