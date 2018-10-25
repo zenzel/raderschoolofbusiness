@@ -23,6 +23,7 @@
 #define STK_LOAD (volatile uint32_t*) 0xE000E014
 #define STK_VAL (volatile uint32_t*) 0xE000E014
 #define STK_ENABLE 0
+#define STK_INT_EN 1
 #define STK_CLKSRC 2
 #define STK_COUNT 16
 uint32_t systick_period;

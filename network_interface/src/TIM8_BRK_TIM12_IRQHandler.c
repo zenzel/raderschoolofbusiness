@@ -86,6 +86,9 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 				//set the edge calibrate high for next rx event
 				counted_edges = 0;
 
+				//clear the bit count
+				bit_count = 0;
+
 				//set green LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA10) | (1 << (PA11 + 16))
 						| (1 << (PA12 + 16));
