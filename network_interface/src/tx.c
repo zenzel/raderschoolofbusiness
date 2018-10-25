@@ -12,20 +12,36 @@
 
 uint8_t tx_get_input() {
 	//how many characters to be sent
-	bytes = 0;
+	bytes = 12;
 
 	//for now let;s limit the transmission to 5 bytes
 	char c;
-	while (bytes < 5) {
+	do{
 		c = usart2_getch();
-		if ((c == ENTER_PRESS)) {
-			break;
-		}
-
 		char_buffer[bytes++] = c;
+		bytes++;
 	}
+	while(c!=ENTER_PRESS);
 	encode();
 	tx();
+	//add synch bits to header
+	char_buffer[0] = 0x5;
+	char_buffer[1] = 0x5;
+	//add version to header
+	char_buffer[2] = 0x0;
+	char_buffer[3] = 0x1;
+	//add source to header
+	char_buffer[4] = 0x0;
+	char_buffer[5] = 0x0;
+	//add destination to header
+	char_buffer[6] = 0x1;
+	char_buffer[7] = 0x1;
+	//add length to header
+	char_buffer[8] = (bytes - 12) & 0xF;
+	char_buffer[9] = (bytes - 12) & 0xF0;
+	//add CRC flag to header
+	char_buffer[10] = 0x0;
+	char_buffer[11] = 0x1;
 	return bytes;
 }
 
@@ -55,7 +71,7 @@ void tx() {
 }
 
 //repeatedly send data so we can test collision stopping
-void collision_test()
+/*void collision_test()
 {
 	tx_count = 0;
 	//enable the transmit timer
@@ -69,7 +85,7 @@ void collision_test()
 			*(TIM6_CR1 ) |= (1 << TIM6_CEN);
 		}
 	}
-}
+}*/
 
 extern void TIM6_DAC_IRQHandler() {
 	//if collision is detected, halt the timer

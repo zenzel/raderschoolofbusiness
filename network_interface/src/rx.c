@@ -21,7 +21,7 @@ void SysTick_Handler(void) {
 	*(STK_CTRL) &= ~(1<<STK_ENABLE);
 
 	//sample the line
-	rx_buffer[bit_count] = *(GPIOB_IDR) & (1 << PB1);
+	rx_buffer[bit_count] = *(GPIOB_IDR) & (1 << PB14);
 	bit_count++;
 
 	if(bit_count == 240) {
@@ -39,5 +39,6 @@ void rx_parse() {
 		}
 		char_count++;
 	}
+
 	parse_flag = 0;
 }

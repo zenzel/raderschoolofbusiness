@@ -11,12 +11,12 @@
 #include <stdbool.h>
 
 //temporary size of character buffer
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 500
 
 #define CHAR_SIZE 8
 
 //TODO find what the enter key returns on our hardware
-#define ENTER_PRESS '\n'
+#define ENTER_PRESS '\r'
 
 //holds number of bytes actually selected to be sent
 volatile uint8_t bytes;
