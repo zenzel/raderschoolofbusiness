@@ -16,12 +16,10 @@ uint8_t tx_get_input() {
 
 	//for now let;s limit the transmission to 5 bytes
 	char c;
-	do{
-		c = usart2_getch();
+	while((c = usart2_getch()) != ENTER_PRESS)
+	{
 		char_buffer[bytes++] = c;
-		bytes++;
 	}
-	while(c!=ENTER_PRESS);
 	//add synch bits to header
 	char_buffer[0] = 0x55;
 	//add version to header
