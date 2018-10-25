@@ -20,8 +20,8 @@ int main() {
 	timer_7_init();
 	timer_6_init();
 	systick_init();
-	usart2_init(DEFAULT_BAUD, F_CPU);
-	tx_get_input();
+	//usart2_init(DEFAULT_BAUD, F_CPU);
+	//tx_get_input();
 	//collision_test();
 	parse_flag = 0;
 	tx();

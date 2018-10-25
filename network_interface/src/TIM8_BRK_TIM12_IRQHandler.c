@@ -47,8 +47,8 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		if(counted_edges < 8) {
 			if(counted_edges) {
 				edge_delta_sum += *(TIM12_CCR1);
-				counted_edges++;
 			}
+			counted_edges++;
 		} else if(counted_edges == 8) {
 			bitrate = (edge_delta_sum/7);
 			bitrate_fourth = bitrate/4;

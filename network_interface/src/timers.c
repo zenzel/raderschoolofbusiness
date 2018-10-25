@@ -24,7 +24,7 @@ void timer_7_init() {
 	*(TIM7_CR1) |= (1 << TIM7_URS);
 
 	//enable interrupt
-	*(TIM7_DIER) |= (1 << TIM7_URS);
+	*(TIM7_DIER) |= (1 << TIM7_UIE);
 
 	//TIM6 is #55 in NVIC
 	*(NVIC_ISER1) |= 1 << TIM7_ISER_EN;
