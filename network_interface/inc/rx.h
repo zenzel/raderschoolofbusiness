@@ -19,8 +19,8 @@ uint32_t bitrate;
 uint32_t bitrate_fourth;
 volatile uint64_t bit_count;
 
-bool rx_buffer[240];
-char rx_chars[30];
+bool rx_buffer[2048];
+char rx_chars[256];
 
 void rx_parse();
 

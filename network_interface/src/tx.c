@@ -12,7 +12,7 @@
 
 uint8_t tx_get_input() {
 	//how many characters to be sent
-	bytes = 12;
+	bytes = 6;
 
 	//for now let;s limit the transmission to 5 bytes
 	char c;
@@ -22,26 +22,20 @@ uint8_t tx_get_input() {
 		bytes++;
 	}
 	while(c!=ENTER_PRESS);
+	//add synch bits to header
+	char_buffer[0] = 0x55;
+	//add version to header
+	char_buffer[1] = 0x01;
+	//add source to header
+	char_buffer[2] = 0x00;
+	//add destination to header
+	char_buffer[3] = 0x11;
+	//add length to header
+	char_buffer[4] = (bytes - 12) & 0xFF;
+	//add CRC flag to header
+	char_buffer[5] = 0x01;
 	encode();
 	tx();
-	//add synch bits to header
-	char_buffer[0] = 0x5;
-	char_buffer[1] = 0x5;
-	//add version to header
-	char_buffer[2] = 0x0;
-	char_buffer[3] = 0x1;
-	//add source to header
-	char_buffer[4] = 0x0;
-	char_buffer[5] = 0x0;
-	//add destination to header
-	char_buffer[6] = 0x1;
-	char_buffer[7] = 0x1;
-	//add length to header
-	char_buffer[8] = (bytes - 12) & 0xF;
-	char_buffer[9] = (bytes - 12) & 0xF0;
-	//add CRC flag to header
-	char_buffer[10] = 0x0;
-	char_buffer[11] = 0x1;
 	return bytes;
 }
 
