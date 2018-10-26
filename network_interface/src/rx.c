@@ -33,14 +33,14 @@ void SysTick_Handler(void) {
 	if(bit_count == 32)
 	{
 		length = 0;
-		length |= rx_buffer[24] << 0;
-		length |= rx_buffer[25] << 1;
-		length |= rx_buffer[26] << 2;
-		length |= rx_buffer[27] << 3;
-		length |= rx_buffer[28] << 4;
-		length |= rx_buffer[29] << 5;
-		length |= rx_buffer[30] << 6;
-		length |= rx_buffer[31] << 7;
+		length |= rx_buffer[31] << 0;
+		length |= rx_buffer[30] << 1;
+		length |= rx_buffer[29] << 2;
+		length |= rx_buffer[28] << 3;
+		length |= rx_buffer[27] << 4;
+		length |= rx_buffer[26] << 5;
+		length |= rx_buffer[25] << 6;
+		length |= rx_buffer[24] << 7;
 	}
 
 	if(length && (bit_count == length)) {

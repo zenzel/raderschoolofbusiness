@@ -11,7 +11,7 @@
 #include "channel_monitor.h"
 
 uint8_t tx_get_input() {
-	//how many characters to be sent
+	//how many bytes will be sent
 	bytes = 6;
 
 	//for now let;s limit the transmission to 5 bytes
@@ -29,7 +29,7 @@ uint8_t tx_get_input() {
 	//add destination to header
 	char_buffer[3] = 0x11;
 	//add length to header
-	char_buffer[4] = (bytes - 12) & 0xFF;
+	char_buffer[4] = (bytes - 1) & 0xFF;
 	//add CRC flag to header
 	char_buffer[5] = 0x01;
 	encode();
