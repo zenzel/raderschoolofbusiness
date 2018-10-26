@@ -49,7 +49,12 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 				edge_delta_sum += *(TIM12_CCR1);
 			}
 			counted_edges++;
-		} else if(counted_edges == 8) {
+		}
+		//CRITICAL FIX off by one error
+		//else if(counted_edges == 8){
+			//counted_edges++;
+		//}
+		if(counted_edges == 8) {
 			bitrate = (edge_delta_sum/7);
 			bitrate_fourth = bitrate/4;
 			*(TIM7_ARR) = bitrate;

@@ -7,6 +7,7 @@
 
 #include "rx.h"
 #include "timers.h"
+#include "uart_driver.h"
 
 void TIM7_IRQHandler(void) {
 	//clear the pending status
@@ -21,7 +22,7 @@ void TIM7_IRQHandler(void) {
 
 void SysTick_Handler(void) {
 	//clear the pending status
-	//*(NVIC_ICSR) &= ~(1 << STK_CLR_PEND);
+	*(NVIC_ICSR) &= ~(1 << STK_CLR_PEND);
 
 	//disable the timer
 	*(STK_CTRL) &= ~(1<<STK_ENABLE);
@@ -41,6 +42,11 @@ void SysTick_Handler(void) {
 		length |= rx_buffer[26] << 5;
 		length |= rx_buffer[25] << 6;
 		length |= rx_buffer[24] << 7;
+<<<<<<< HEAD
+=======
+
+		length *= 8;
+>>>>>>> 63d1d7b276d1d78df1e44ed68f068242df0ade9d
 	}
 
 	if(length && (bit_count == length)) {
@@ -53,11 +59,16 @@ void SysTick_Handler(void) {
 
 void rx_parse() {
 	uint8_t char_count = 0;
-	while(bit_count) {
-		for(int i = 0; i < 8; i++) {
-			rx_chars[char_count] |= rx_buffer[bit_count--] << i;
+	uint8_t bits = 0;
+	while(bits < bit_count) {
+		for(int i = 7; i >= 0; i--) {
+			rx_chars[char_count] |= rx_buffer[bits++] << i;
 		}
 		char_count++;
+	}
+
+	for(int i = 0; i <= char_count; i++) {
+		usart2_putch(rx_chars[i]);
 	}
 
 	parse_flag = 0;

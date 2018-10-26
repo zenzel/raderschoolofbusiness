@@ -11,7 +11,7 @@
 
 void systick_init() {
 	//enable interrupts
-	*(STK_CTRL) |= (1 << STK_INT_EN);
+	*(STK_CTRL) |= ((1 << STK_CLKSRC) | (1 << STK_INT_EN));
 }
 
 void timer_7_init() {
