@@ -7,6 +7,7 @@
 
 #include "rx.h"
 #include "timers.h"
+#include "uart_driver.h"
 
 void TIM7_IRQHandler(void) {
 	//clear the pending status
@@ -21,7 +22,7 @@ void TIM7_IRQHandler(void) {
 
 void SysTick_Handler(void) {
 	//clear the pending status
-	//*(NVIC_ICSR) &= ~(1 << STK_CLR_PEND);
+	*(NVIC_ICSR) &= ~(1 << STK_CLR_PEND);
 
 	//disable the timer
 	*(STK_CTRL) &= ~(1<<STK_ENABLE);
@@ -33,14 +34,16 @@ void SysTick_Handler(void) {
 	if(bit_count == 32)
 	{
 		length = 0;
-		length |= rx_buffer[24] << 0;
-		length |= rx_buffer[25] << 1;
-		length |= rx_buffer[26] << 2;
-		length |= rx_buffer[27] << 3;
-		length |= rx_buffer[28] << 4;
-		length |= rx_buffer[29] << 5;
-		length |= rx_buffer[30] << 6;
-		length |= rx_buffer[31] << 7;
+		length |= rx_buffer[31] << 0;
+		length |= rx_buffer[30] << 1;
+		length |= rx_buffer[29] << 2;
+		length |= rx_buffer[28] << 3;
+		length |= rx_buffer[27] << 4;
+		length |= rx_buffer[26] << 5;
+		length |= rx_buffer[25] << 6;
+		length |= rx_buffer[24] << 7;
+
+		length *= 8;
 	}
 
 	if(length && (bit_count == length)) {
@@ -53,11 +56,16 @@ void SysTick_Handler(void) {
 
 void rx_parse() {
 	uint8_t char_count = 0;
-	while(bit_count) {
-		for(int i = 0; i < 8; i++) {
-			rx_chars[char_count] |= rx_buffer[bit_count--] << i;
+	uint8_t bits = 0;
+	while(bits < bit_count) {
+		for(int i = 7; i >= 0; i--) {
+			rx_chars[char_count] |= rx_buffer[bits++] << i;
 		}
 		char_count++;
+	}
+
+	for(int i = 0; i <= char_count; i++) {
+		usart2_putch(rx_chars[i]);
 	}
 
 	parse_flag = 0;
