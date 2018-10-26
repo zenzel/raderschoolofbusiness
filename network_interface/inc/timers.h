@@ -17,6 +17,7 @@
 //NVIC registers
 #define NVIC_BASE (volatile uint32_t*) 0xE000E100
 #define NVIC_ISER1 (volatile uint32_t*) 0xE000E104
+#define NVIC_ICSR (volatile uint32_t*) 0xE000ED04
 
 //systick
 #define STK_CTRL (volatile uint32_t*) 0xE000E010
@@ -26,6 +27,8 @@
 #define STK_INT_EN 1
 #define STK_CLKSRC 2
 #define STK_COUNT 16
+//clear in what i call NVIC_ICSR
+#define STK_CLR_PEND 25
 uint32_t systick_period;
 
 //TIM6
@@ -63,6 +66,7 @@ uint32_t systick_period;
 #define TIM7_URS 2
 #define TIM7_CEN 0
 #define TIM7_UIE 0
+#define TIM7_UIF 0
 #define TIM7_ISER_EN 23
 
 uint32_t tim7_bitrate_psc;

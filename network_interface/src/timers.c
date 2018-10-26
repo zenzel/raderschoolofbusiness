@@ -5,6 +5,7 @@
  */
 
 #include "timers.h"
+#include "rx.h"
 #include "GPIO_driver.h"
 
 
@@ -15,7 +16,7 @@ void systick_init() {
 
 void timer_7_init() {
 	//enable PB1 as input
-	mode_select(GPIOB_MODER, IN, 1);
+	//mode_select(GPIOB_MODER, IN, 1);
 
 	//enable timer clock
 	*(RCC_APB1ENR) |= (1 << TIM7_APB1ENR);

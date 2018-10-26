@@ -24,7 +24,7 @@ int main() {
 	//tx_get_input();
 	//collision_test();
 	parse_flag = 0;
-	tx();
+	//tx();
 	while(1) {
 		if(parse_flag) {
 			rx_parse();

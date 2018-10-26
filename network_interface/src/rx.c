@@ -9,14 +9,20 @@
 #include "timers.h"
 
 void TIM7_IRQHandler(void) {
+	//clear the pending status
+	*(TIM7_SR) &= ~(1 << TIM7_UIF);
+
 	//set it to be 1/4 of bit period
 	*(STK_LOAD) = bitrate_fourth;
 
 	//enable the timer
-	*(STK_CTRL) |= (1<<STK_ENABLE);
+	*(STK_CTRL) |= (1 << STK_ENABLE);
 }
 
 void SysTick_Handler(void) {
+	//clear the pending status
+	//*(NVIC_ICSR) &= ~(1 << STK_CLR_PEND);
+
 	//disable the timer
 	*(STK_CTRL) &= ~(1<<STK_ENABLE);
 
@@ -26,6 +32,7 @@ void SysTick_Handler(void) {
 	//if we read in the length field
 	if(bit_count == 32)
 	{
+		length = 0;
 		length |= rx_buffer[24] << 0;
 		length |= rx_buffer[25] << 1;
 		length |= rx_buffer[26] << 2;
@@ -35,11 +42,13 @@ void SysTick_Handler(void) {
 		length |= rx_buffer[30] << 6;
 		length |= rx_buffer[31] << 7;
 	}
-	if(bit_count == length) {
+
+	if(length && (bit_count == length)) {
 		//disable timer 7
 		*(TIM7_CR1) &= ~(1 << TIM7_CEN);
 		parse_flag = 1;
 	}
+
 }
 
 void rx_parse() {
