@@ -50,10 +50,8 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 			}
 			counted_edges++;
 		}
-		//CRITICAL FIX off by one error
-		//else if(counted_edges == 8){
-			//counted_edges++;
-		//}
+
+		//synch has been fully received
 		if(counted_edges == 8) {
 			bitrate = (edge_delta_sum/7);
 			bitrate_fourth = bitrate/4;

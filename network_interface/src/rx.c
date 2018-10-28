@@ -13,6 +13,19 @@ void TIM7_IRQHandler(void) {
 	//clear the pending status
 	*(TIM7_SR) &= ~(1 << TIM7_UIF);
 
+	int temp = *(TIM12_CCR1);
+
+	//this doesn't work
+	if(temp > (bitrate * (3/4))) {
+		bitrate = temp;
+
+	} else {
+		bitrate = temp*2;
+	}
+
+	*(TIM7_ARR) = bitrate;
+	bitrate_fourth = bitrate/4;
+
 	//set it to be 1/4 of bit period
 	*(STK_LOAD) = bitrate_fourth;
 
@@ -42,11 +55,8 @@ void SysTick_Handler(void) {
 		length |= rx_buffer[26] << 5;
 		length |= rx_buffer[25] << 6;
 		length |= rx_buffer[24] << 7;
-<<<<<<< HEAD
-=======
-
+		//convert length to bits
 		length *= 8;
->>>>>>> 63d1d7b276d1d78df1e44ed68f068242df0ade9d
 	}
 
 	if(length && (bit_count == length)) {
