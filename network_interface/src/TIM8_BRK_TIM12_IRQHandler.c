@@ -58,8 +58,38 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 			*(TIM7_ARR) = bitrate;
 			//enable
 			*(TIM7_CR1) |= (1 << TIM7_CEN);
+			//populate first edge register
+			edges[0] = *(TIM12_CCR1);
 			counted_edges++;
 		}
+
+		//populate the next two required edge registers
+		if(counted_edges == 9) {
+			edges[1] = *(TIM12_CCR1);
+			counted_edges++;
+		} else if(counted_edges == 10) {
+			edges[2] = *(TIM12_CCR1);
+			counted_edges++;
+		}
+
+		if(counted_edges > 11) {
+			//we know that the delta of the last two edges was the bitrate
+			if((edges[2] - edges[1]) > ((0.75)*bitrate)) {
+				bitrate = (edges[2] - edges[1]);
+				bitrate_fourth = bitrate/4;
+			} else {
+				//the edge delta was half bitrate
+				bitrate = (edges[2] - edges[0]);
+				bitrate_fourth = bitrate/4;
+			}
+
+			//shift the edge registers
+			edges[0] = edges[1];
+			edges[1] = edges[2];
+			edges[2] = *(TIM12_CCR1);
+		}
+
+
 	}
 
 	//check if timer expired, then check if line is high or low to determine if idle or collision

@@ -13,23 +13,13 @@ void TIM7_IRQHandler(void) {
 	//clear the pending status
 	*(TIM7_SR) &= ~(1 << TIM7_UIF);
 
-	int temp = *(TIM12_CCR1);
-
-	//this doesn't work
-	if(temp > (bitrate * (3/4))) {
-		bitrate = temp;
-
-	} else {
-		bitrate = temp*2;
-	}
-
+	//reset the count
 	*(TIM7_ARR) = bitrate;
-	bitrate_fourth = bitrate/4;
 
 	//set it to be 1/4 of bit period
 	*(STK_LOAD) = bitrate_fourth;
 
-	//enable the timer
+	//enable the systick
 	*(STK_CTRL) |= (1 << STK_ENABLE);
 }
 
