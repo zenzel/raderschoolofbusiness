@@ -12,14 +12,16 @@
 
 #define PB1 1
 
-uint8_t parse_flag;
-uint8_t counted_edges;
+uint32_t parse_flag;
+uint32_t counted_edges;
 uint32_t edge_delta_sum;
 uint32_t bitrate;
 uint32_t bitrate_fourth;
 volatile uint64_t bit_count;
-uint8_t length;
-int edges[3];
+uint32_t length;
+uint32_t state;
+uint32_t sample_flag;
+//int edges[3];
 
 bool rx_buffer[2048];
 char rx_chars[256];

@@ -12,6 +12,8 @@
 void systick_init() {
 	//enable interrupts
 	*(STK_CTRL) |= ((1 << STK_CLKSRC) | (1 << STK_INT_EN));
+	sample_flag = 0;
+	state = 0;
 }
 
 void timer_7_init() {

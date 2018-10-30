@@ -22,7 +22,7 @@
 //systick
 #define STK_CTRL (volatile uint32_t*) 0xE000E010
 #define STK_LOAD (volatile uint32_t*) 0xE000E014
-#define STK_VAL (volatile uint32_t*) 0xE000E014
+#define STK_VAL (volatile uint32_t*) 0xE000E008
 #define STK_ENABLE 0
 #define STK_INT_EN 1
 #define STK_CLKSRC 2

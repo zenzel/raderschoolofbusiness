@@ -55,15 +55,41 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		if(counted_edges == 8) {
 			bitrate = (edge_delta_sum/7);
 			bitrate_fourth = bitrate/4;
-			*(TIM7_ARR) = bitrate;
+			//*(TIM7_ARR) = bitrate;
 			//enable
-			*(TIM7_CR1) |= (1 << TIM7_CEN);
+			//*(TIM7_CR1) |= (1 << TIM7_CEN);
 			//populate first edge register
-			edges[0] = *(TIM12_CCR1);
+			//edges[0] = *(TIM12_CCR1);
+			*(STK_LOAD) = bitrate_fourth;
 			counted_edges++;
 		}
+		else if(counted_edges == 9){
+			if(*(TIM12_CCR1) > (0.75*bitrate)){
+				*(STK_CTRL) |= (1 << STK_ENABLE);
+			}
+			else{
+				counted_edges++;
+			}
+		}
+		else if(counted_edges == 10){
+			*(STK_CTRL) |= (1 << STK_ENABLE);
+		}
 
-		//populate the next two required edge registers
+
+		if(state == 2) {
+			if(*(TIM12_CCR1) > ((0.75)*bitrate)) {
+				bitrate = *(TIM12_CCR1);
+			} else {
+				bitrate = 2*(*(TIM12_CCR1));
+			}
+			bitrate_fourth = bitrate/4;
+			*(STK_LOAD) = bitrate_fourth;
+			//enable the systick
+			*(STK_CTRL) |= (1 << STK_ENABLE);
+			state = 0;
+		}
+
+		/*populate the next two required edge registers
 		if(counted_edges == 9) {
 			edges[1] = *(TIM12_CCR1);
 			counted_edges++;
@@ -76,18 +102,23 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 			//we know that the delta of the last two edges was the bitrate
 			if((edges[2] - edges[1]) > ((0.75)*bitrate)) {
 				bitrate = (edges[2] - edges[1]);
-				bitrate_fourth = bitrate/4;
 			} else {
+				if((edges[2] - edges[0]) > bitrate) {
+					bitrate = (edges[1] - edges[0]);
+				} else {
+					bitrate = (edges[2] - edges[0]);
+				}
 				//the edge delta was half bitrate
 				bitrate = (edges[2] - edges[0]);
-				bitrate_fourth = bitrate/4;
 			}
+
+			bitrate_fourth = bitrate/4;
 
 			//shift the edge registers
 			edges[0] = edges[1];
 			edges[1] = edges[2];
 			edges[2] = *(TIM12_CCR1);
-		}
+		}*/
 
 
 	}
