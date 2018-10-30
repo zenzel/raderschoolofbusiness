@@ -82,7 +82,7 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 			} else {
 				bitrate = 2*(*(TIM12_CCR1));
 			}
-			bitrate_fourth = bitrate/4;
+			bitrate_fourth = (bitrate/4) + 50;
 			*(STK_LOAD) = bitrate_fourth;
 			//enable the systick
 			*(STK_CTRL) |= (1 << STK_ENABLE);
@@ -149,9 +149,6 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 
 				//set the edge calibrate high for next rx event
 				counted_edges = 0;
-
-				//clear the bit count
-				bit_count = 0;
 
 				//set green LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA10) | (1 << (PA11 + 16))

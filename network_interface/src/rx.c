@@ -85,4 +85,7 @@ void rx_parse() {
 	}
 
 	parse_flag = 0;
+
+	//clear the bit count
+	bit_count = 0;
 }
