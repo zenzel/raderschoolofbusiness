@@ -19,7 +19,7 @@
 #define ENTER_PRESS '\r'
 
 //holds number of bytes actually selected to be sent
-volatile uint8_t bytes;
+volatile uint16_t bytes;
 
 //holds characters to transmit
 char char_buffer[BUFFER_SIZE];
