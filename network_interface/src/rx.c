@@ -9,20 +9,6 @@
 #include "timers.h"
 #include "uart_driver.h"
 
-/*void TIM7_IRQHandler(void) {
-	//clear the pending status
-	*(TIM7_SR) &= ~(1 << TIM7_UIF);
-
-	//reset the count
-	*(TIM7_ARR) = bitrate;
-
-	//set it to be 1/4 of bit period
-	*(STK_LOAD) = bitrate_fourth;
-
-	//enable the systick
-	*(STK_CTRL) |= (1 << STK_ENABLE);
-}*/
-
 void SysTick_Handler(void) {
 	//clear the pending status
 	*(NVIC_ICSR) &= ~(1 << STK_CLR_PEND);

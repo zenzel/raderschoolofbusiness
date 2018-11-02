@@ -5,6 +5,7 @@
  * @brief Source file for CE4951 Milestone 2: network transmitter.
  */
 
+#include <stdlib.h>
 #include "timers.h"
 #include "tx.h"
 #include "uart_driver.h"
@@ -81,11 +82,24 @@ void tx() {
 
 extern void TIM6_DAC_IRQHandler() {
 	//if collision is detected, halt the timer
-
 	if (channel_status == COLLISION) {
-		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+		//set the line idle
 		*(GPIOB_BSRR) = 1 << PB15;
+
+		//disable transmit timer
+		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+
+		//clear transmit count
+		tx_count = 0;
+
+		//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
+		wait_time_reload = (16000)*(0.005)*(rand() % 201);
+
+		//set TIM7 ARR to count the wait time
+		*(TIM7_ARR) = wait_time_reload;
+		*(TIM7_CR1) |= (1 << TIM7_CEN);
 	} else if (tx_count < (bytes * CHAR_SIZE * 2)) {
+		waiting = false;
 		//here we set the BSRR to whatever is in the tx register
 		//*(GPIOB_BSRR) = (1 << (PB15 + 16)) | (tx_buffer[tx_count++] << PB15);
 		if (tx_buffer[tx_count]) {
@@ -100,5 +114,18 @@ extern void TIM6_DAC_IRQHandler() {
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
 		*(GPIOB_BSRR) = 1 << PB15;
 	}
-	*(TIM6_SR ) &= 0xFFFE;
+
+	//clear the pending IRQ bit
+	*(TIM6_SR) &= ~(1 << TIM7_UIF);
+}
+
+void TIM7_IRQHandler(void) {
+	//clear the pending status
+	*(TIM7_SR) &= ~(1 << TIM7_UIF);
+
+	//disable TIM7
+	*(TIM7_CR1) &= ~(1 << TIM7_CEN);
+
+	//enable the transmit timer
+	*(TIM6_CR1 ) |= (1 << TIM6_CEN);
 }

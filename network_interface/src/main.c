@@ -21,10 +21,10 @@ int main() {
 	timer_6_init();
 	systick_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
-	tx_get_input();
 	//collision_test();
-	parse_flag = 0;
+	tx_get_input();
 	tx();
+	parse_flag = 0;
 	while(1) {
 		if(parse_flag) {
 			rx_parse();
