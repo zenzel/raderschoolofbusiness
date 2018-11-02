@@ -112,7 +112,9 @@ extern void TIM6_DAC_IRQHandler() {
 	} else if (tx_count == (bytes * CHAR_SIZE * 2)) {
 		//turn off TIM6 because we are done transmitting
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
-		//*(GPIOB_BSRR) = 1 << PB15;
+
+		//clear bit
+		*(GPIOB_BSRR) = 1 << PB15;
 	}
 
 	//clear the pending IRQ bit
