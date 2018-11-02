@@ -21,9 +21,25 @@ int main() {
 	timer_6_init();
 	systick_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
+
+	//tx or rx
+	usart2_putch('t');
+	usart2_putch('/');
+	usart2_putch('r');
+	usart2_putch('?');
+	usart2_putch('\n');
+	usart2_putch('\r');
+	char choice = usart2_getch();
+
+	if(choice == 't') {
+		usart2_putch('t');
+		usart2_putch(':');
+		usart2_putch(' ');
+		tx_get_input();
+		tx();
+	}
+
 	//collision_test();
-	tx_get_input();
-	tx();
 	parse_flag = 0;
 	while(1) {
 		if(parse_flag) {
