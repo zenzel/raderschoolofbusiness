@@ -84,20 +84,20 @@ extern void TIM6_DAC_IRQHandler() {
 	//if collision is detected, halt the timer
 	if (channel_status == COLLISION) {
 		//set the line idle
-		*(GPIOB_BSRR) = 1 << PB15;
+		//*(GPIOB_BSRR) = 1 << PB15;
 
 		//disable transmit timer
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
 
 		//clear transmit count
-		tx_count = 0;
+		//tx_count = 0;
 
 		//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
-		wait_time_reload = (16000)*(0.005)*(rand() % 201);
+		//wait_time_reload = (16000)*(0.005)*(rand() % 201);
 
 		//set TIM7 ARR to count the wait time
-		*(TIM7_ARR) = wait_time_reload;
-		*(TIM7_CR1) |= (1 << TIM7_CEN);
+		//*(TIM7_ARR) = wait_time_reload;
+		//*(TIM7_CR1) |= (1 << TIM7_CEN);
 	} else if (tx_count < (bytes * CHAR_SIZE * 2)) {
 		waiting = false;
 		//here we set the BSRR to whatever is in the tx register
@@ -112,7 +112,7 @@ extern void TIM6_DAC_IRQHandler() {
 	} else if (tx_count == (bytes * CHAR_SIZE * 2)) {
 		//turn off TIM6 because we are done transmitting
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
-		*(GPIOB_BSRR) = 1 << PB15;
+		//*(GPIOB_BSRR) = 1 << PB15;
 	}
 
 	//clear the pending IRQ bit

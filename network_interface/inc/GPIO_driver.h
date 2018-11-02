@@ -55,6 +55,7 @@ GPIOA->MODER = ...
 #define GPIOA_AFRL  (volatile uint32_t*) 0x40020020
 #define GPIOB_AFRL (volatile uint32_t*) 0x40020420
 
+#define GPIOB_PUPDR (volatile uint32_t*) 0x4002000C
 #define GPIOC_PUPDR (volatile uint32_t*) 0x4002080C
 
 #define GPIOB_AFRH (volatile uint32_t*) 0x40020424

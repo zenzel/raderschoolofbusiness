@@ -21,6 +21,8 @@ int main() {
 	timer_6_init();
 	systick_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
+	//set tx pin to pull-up
+	*(GPIOB_PUPDR) |= 0b01 << (PB15 * 2);
 
 	//tx or rx
 	usart2_putch('t');
