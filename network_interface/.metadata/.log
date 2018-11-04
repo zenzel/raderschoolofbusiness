@@ -1,0 +1,20 @@
+!SESSION 2018-11-02 15:46:26.718 -----------------------------------------------
+eclipse.buildId=4.6.3.M20170301-0400
+java.version=1.8.0_151
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product C:\Users\doughertymj\Documents\CE 4951\Final Stretch\raderschoolofbusiness\RemoteSystemsTempFiles\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product -data C:\Users\doughertymj\Documents\CE 4951\Final Stretch\raderschoolofbusiness\network_interface -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product C:\Users\doughertymj\Documents\CE 4951\Final Stretch\raderschoolofbusiness\RemoteSystemsTempFiles\.project
+
+!ENTRY fr.ac6.mcu.ide 1 1 2018-11-02 15:46:35.145
+!MESSAGE Started RMI Server, listening on port 21112
+!SESSION 2018-11-02 15:49:06.002 -----------------------------------------------
+eclipse.buildId=4.6.3.M20170301-0400
+java.version=1.8.0_151
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product C:\Users\doughertymj\Documents\CE 4951\Final Stretch\raderschoolofbusiness\network_interface\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -pluginCustomization configuration/st_pref.ini -product org.eclipse.epp.package.cpp.product C:\Users\doughertymj\Documents\CE 4951\Final Stretch\raderschoolofbusiness\network_interface\.project
+
+!ENTRY fr.ac6.mcu.ide 1 1 2018-11-02 15:49:20.165
+!MESSAGE Started RMI Server, listening on port 21112
