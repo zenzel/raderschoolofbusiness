@@ -82,6 +82,7 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 			} else {
 				bitrate = 2*(*(TIM12_CCR1));
 			}
+			//50 is a magic number to account for instruction times on the cpu
 			bitrate_fourth = (bitrate/4) + 50;
 			*(STK_LOAD) = bitrate_fourth;
 			//enable the systick
@@ -131,14 +132,26 @@ extern void TIM8_BRK_TIM12_IRQHandler()
 		//if data is high
 		if (!Tx_line1)
 		{
-			//if (channel_status != IDLE)
-			//{
 				//set state to COLLISION
 				channel_status = COLLISION;
 				//set red LED and clear others
 				*(GPIOA_BSRR ) = (1 << PA12) | (1 << (PA11 + 16))
 						| (1 << (PA10 + 16));
-			//}
+				//set the line idle
+				*(GPIOB_BSRR) = 1 << PB15;
+
+				//disable transmit timer
+				*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+
+				//clear transmit count
+				tx_count = 0;
+
+				//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
+				wait_time_reload = (16000)*(0.005)*(rand() % 201);
+
+				//set TIM7 ARR to count the wait time
+				*(TIM7_ARR) = wait_time_reload;
+				*(TIM7_CR1) |= (1 << TIM7_CEN);
 		}
 		else
 		{
