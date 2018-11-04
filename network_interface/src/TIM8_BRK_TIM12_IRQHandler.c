@@ -110,7 +110,7 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 			tx_count = 0;
 
 			//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
-			wait_time_reload = (16000)*(0.005)*(rand() % 201);
+			wait_time_reload = 50*((rand() % 200) + 1);
 
 			//set TIM7 ARR to count the wait time
 			*(TIM7_ARR) = wait_time_reload;

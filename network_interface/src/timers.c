@@ -31,6 +31,9 @@ void timer_7_init() {
 
 	//TIM7 is #55 in NVIC
 	*(NVIC_ISER1) |= 1 << TIM7_ISER_EN;
+
+	//set the prescale to 0.1ms
+	*(TIM7_PSC) = 1600;
 }
 
 void timer_6_init() {
