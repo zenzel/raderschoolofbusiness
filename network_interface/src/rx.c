@@ -53,6 +53,9 @@ void SysTick_Handler(void) {
 		//disable timer 7
 		//*(TIM7_CR1) &= ~(1 << TIM7_CEN);
 		parse_flag = 1;
+
+		//disable systick
+		*(STK_CTRL) &= ~(1 << STK_ENABLE);
 	}
 }
 
