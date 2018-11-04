@@ -46,7 +46,9 @@ uint32_t systick_period;
 #define TIM6_URS 2
 #define TIM6_CEN 0
 #define TIM6_UIE 0
+#define TIM6_UIF 0
 #define TIM6_ISER_EN 22
+#define TIM6_ICPR_CLR 24
 
 #define BITRATE_PSC 2673
 #define BITRATE_RELOAD 2

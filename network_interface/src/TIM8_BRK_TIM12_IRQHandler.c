@@ -94,6 +94,9 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 		*(TIM12_SR ) &= 0xFFFE;
 		//if data is high
 		if (!Tx_line1) {
+			//turn systick off
+			*(STK_CTRL) &= ~(1 << STK_ENABLE);
+
 			//set state to COLLISION
 			channel_status = COLLISION;
 			//set red LED and clear others
@@ -102,6 +105,13 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 
 			//set the line idle
 			*(GPIOB_BSRR) = 1 << PB15;
+
+			//reset receive variables
+			counted_edges = 0;
+			bit_count = 0;
+			length = 0;
+			parse_flag = 0;
+			state = 0;
 
 			//disable transmit timer
 			*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);

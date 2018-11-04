@@ -33,6 +33,7 @@ int tx_count;
 uint32_t wait_time_reload;
 bool waiting;
 
+
 uint8_t tx_get_input();
 void tx();
 void encode();

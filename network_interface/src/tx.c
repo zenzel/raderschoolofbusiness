@@ -10,6 +10,7 @@
 #include "tx.h"
 #include "uart_driver.h"
 #include "channel_monitor.h"
+#include "GPIO_driver.h"
 
 uint8_t tx_get_input() {
 	//how many bytes will be sent
@@ -81,6 +82,12 @@ void tx() {
 }*/
 
 extern void TIM6_DAC_IRQHandler() {
+	//clear the pending IRQ bit
+	*(TIM6_SR) &= ~(1 << TIM6_UIF);
+
+	//clear the pending IRQ in NVIC
+	*(NVIC_ICPR1) |= (1 << TIM6_ICPR_CLR);
+
 	//if still transmitting
 	if (tx_count < (bytes * CHAR_SIZE * 2)) {
 		waiting = false;
@@ -100,9 +107,6 @@ extern void TIM6_DAC_IRQHandler() {
 		//clear bit
 		*(GPIOB_BSRR) = 1 << PB15;
 	}
-
-	//clear the pending IRQ bit
-	*(TIM6_SR) &= ~(1 << TIM7_UIF);
 }
 
 void TIM7_IRQHandler(void) {
