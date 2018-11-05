@@ -24,6 +24,9 @@ volatile uint16_t bytes;
 //holds characters to transmit
 char char_buffer[BUFFER_SIZE];
 
+//backoff flag
+bool backoff;
+
 //holds the breakout of bits from transmit characters
 bool tx_buffer[CHAR_SIZE * BUFFER_SIZE * 2];
 

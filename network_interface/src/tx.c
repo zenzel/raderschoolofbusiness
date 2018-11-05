@@ -118,4 +118,7 @@ void TIM7_IRQHandler(void) {
 
 	//enable the transmit timer
 	*(TIM6_CR1 ) |= (1 << TIM6_CEN);
+
+	//signal we are done backing off
+	backoff = false;
 }

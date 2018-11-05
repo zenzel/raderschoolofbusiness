@@ -104,35 +104,38 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 
 			//set the line idle
 			*(GPIOB_BSRR) = 1 << PB15;
+			if(backoff == false)
+			{
+				backoff = true;
+				//reset receive variables
+				counted_edges = 0;
+				bit_count = 0;
+				length = 0;
+				parse_flag = 0;
+				state = 0;
+				edge_delta_sum = 0;
 
-			//reset receive variables
-			counted_edges = 0;
-			bit_count = 0;
-			length = 0;
-			parse_flag = 0;
-			state = 0;
-			edge_delta_sum = 0;
+				//clear transmit count
+				tx_count = 0;
 
-			//clear transmit count
-			tx_count = 0;
+				//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
+				wait_time_reload = 50 * ((rand() % 200) + 1);
+				char wait_print[8];
+				itoa(wait_time_reload, wait_print, 10);
+				usart2_putch(wait_print[0]);
+				usart2_putch(wait_print[1]);
+				usart2_putch(wait_print[2]);
+				usart2_putch(wait_print[3]);
+				usart2_putch(wait_print[4]);
+				usart2_putch(wait_print[5]);
+				usart2_putch(wait_print[6]);
+				usart2_putch(wait_print[7]);
+				usart2_putch(wait_print[8]);
 
-			//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
-			wait_time_reload = 50*((rand() % 200) + 1);
-			char wait_print[8];
-			itoa(wait_time_reload, wait_print, 10);
-			usart2_putch(wait_print[8]);
-			usart2_putch(wait_print[7]);
-			usart2_putch(wait_print[6]);
-			usart2_putch(wait_print[5]);
-			usart2_putch(wait_print[4]);
-			usart2_putch(wait_print[3]);
-			usart2_putch(wait_print[2]);
-			usart2_putch(wait_print[1]);
-			usart2_putch(wait_print[0]);
-
-			//set TIM7 ARR to count the wait time
-			*(TIM7_ARR) = wait_time_reload;
-			*(TIM7_CR1) |= (1 << TIM7_CEN);
+				//set TIM7 ARR to count the wait time
+				*(TIM7_ARR ) = wait_time_reload;
+				*(TIM7_CR1 ) |= (1 << TIM7_CEN);
+			}
 		} else {
 			//set state to IDLE
 			channel_status = IDLE;

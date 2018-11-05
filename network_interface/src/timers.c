@@ -6,6 +6,7 @@
 
 #include "timers.h"
 #include "rx.h"
+#include "tx.h"
 #include "GPIO_driver.h"
 
 
@@ -73,6 +74,9 @@ void timer_6_init() {
 //This voltage checking will be taken care of in the TIM12 IRQHandler
 void timer_12_init()
 {
+	//init backoff flag
+	backoff = false;
+
 	//PUPDR???
 	//enable GPIOB PB15 for transmit
 	clock_init(GPIOB);
