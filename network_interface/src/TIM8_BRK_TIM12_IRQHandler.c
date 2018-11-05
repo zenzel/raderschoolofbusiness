@@ -9,6 +9,7 @@
 #include <timers.h>
 #include <stdlib.h>
 #include "channel_monitor.h"
+#include "UART_driver.h"
 #include "tx.h"
 #include "rx.h"
 
@@ -112,6 +113,7 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 			length = 0;
 			parse_flag = 0;
 			state = 0;
+			edge_delta_sum = 0;
 
 			//disable transmit timer
 			*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
@@ -121,6 +123,17 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 
 			//calculate random backoff time in 16MHz ARR values, configured for 0.000s - 1.000s
 			wait_time_reload = 50*((rand() % 200) + 1);
+			char wait_print[8];
+			itoa(wait_time_reload, wait_print, 10);
+			usart2_putch(wait_print[8]);
+			usart2_putch(wait_print[7]);
+			usart2_putch(wait_print[6]);
+			usart2_putch(wait_print[5]);
+			usart2_putch(wait_print[4]);
+			usart2_putch(wait_print[3]);
+			usart2_putch(wait_print[2]);
+			usart2_putch(wait_print[1]);
+			usart2_putch(wait_print[0]);
 
 			//set TIM7 ARR to count the wait time
 			*(TIM7_ARR) = wait_time_reload;

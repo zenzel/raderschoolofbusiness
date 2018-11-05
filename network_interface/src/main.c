@@ -44,6 +44,13 @@ int main() {
 	while(1) {
 		if(parse_flag) {
 			rx_parse();
+			//reset receive variables
+			counted_edges = 0;
+			bit_count = 0;
+			length = 0;
+			parse_flag = 0;
+			state = 0;
+			edge_delta_sum = 0;
 		}
 	}
 }
