@@ -55,12 +55,7 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 		//synch has been fully received
 		if (counted_edges == 8) {
 			bitrate = (edge_delta_sum / 7);
-			bitrate_fourth = bitrate / 4;
-			//*(TIM7_ARR) = bitrate;
-			//enable
-			//*(TIM7_CR1) |= (1 << TIM7_CEN);
-			//populate first edge register
-			//edges[0] = *(TIM12_CCR1);
+			bitrate_fourth = (bitrate / 4) + STK_OFFSET;
 			*(STK_LOAD ) = bitrate_fourth;
 			counted_edges++;
 		} else if (counted_edges == 9) {
@@ -81,7 +76,7 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 			}
 
 			//50 is an offset to account for instruction overhead on CPU
-			bitrate_fourth = (bitrate / 4) + 50;
+			bitrate_fourth = (bitrate / 4) + STK_OFFSET;
 			*(STK_LOAD ) = bitrate_fourth;
 			//enable the systick
 			*(STK_CTRL ) |= (1 << STK_ENABLE);
@@ -95,6 +90,9 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 		*(TIM12_SR ) &= 0xFFFE;
 		//if data is high
 		if (!Tx_line1) {
+			//disable transmit timer
+			*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
+
 			//turn systick off
 			*(STK_CTRL) &= ~(1 << STK_ENABLE);
 
@@ -114,9 +112,6 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 			parse_flag = 0;
 			state = 0;
 			edge_delta_sum = 0;
-
-			//disable transmit timer
-			*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
 
 			//clear transmit count
 			tx_count = 0;

@@ -11,6 +11,7 @@
 #include <stdbool.h>
 
 #define PB1 1
+#define STK_OFFSET 50
 
 uint32_t parse_flag;
 uint32_t counted_edges;
@@ -21,7 +22,6 @@ volatile uint64_t bit_count;
 uint32_t length;
 uint32_t state;
 uint32_t sample_flag;
-//int edges[3];
 
 bool rx_buffer[2048];
 char rx_chars[256];

@@ -14,7 +14,6 @@
 #include "rx.h"
 
 int main() {
-
 	channel_monitor_init();
 	timer_12_init();
 	timer_7_init();
