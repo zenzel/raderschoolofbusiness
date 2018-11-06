@@ -46,25 +46,6 @@ void crc() {
 
 }
 
-void crcInit(void) {
-	CRC remainder;
-
-	for (int dividend = 0; dividend < 256; ++dividend) {
-		remainder = dividend << (WIDTH - 8);
-
-		for (uint8_t bit = 8; bit > 0; --bit) {
-			if (remainder & TOPBIT) {
-				remainder = (remainder << 1) ^ POLYNOMIAL;
-			} else {
-				remainder = (remainder << 1);
-			}
-		}
-
-		crcTable[dividend] = remainder;
-	}
-
-}
-
 //an algorithm to turn the transmit character into manchester levels
 void encode() {
 	//first loop iterates through all bytes stored in the character buffer
