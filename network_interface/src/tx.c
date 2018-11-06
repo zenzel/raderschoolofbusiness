@@ -18,8 +18,7 @@ uint8_t tx_get_input() {
 
 	//for now let;s limit the transmission to 5 bytes
 	char c;
-	while((c = usart2_getch()) != ENTER_PRESS)
-	{
+	while ((c = usart2_getch()) != ENTER_PRESS) {
 		char_buffer[bytes++] = c;
 	}
 	//add synch bits to header
@@ -31,12 +30,39 @@ uint8_t tx_get_input() {
 	//add destination to header
 	char_buffer[3] = 0x11;
 	//add length to header
-	char_buffer[4] = (bytes - 1) & 0xFF;
+	//usually this would be (bytes - 1), but (-1) taken off for CRC byte addition
+	char_buffer[4] = (bytes) & 0xFF;
 	//add CRC flag to header
 	char_buffer[5] = 0x01;
+	//add CRC trailer before data is encoded (0xAA placeholder)
+	char_buffer[bytes++] = 0xAA;
 	encode();
 	tx();
 	return bytes;
+}
+
+//crc algorithm (reference: https://barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code)
+void crc() {
+
+}
+
+void crcInit(void) {
+	CRC remainder;
+
+	for (int dividend = 0; dividend < 256; ++dividend) {
+		remainder = dividend << (WIDTH - 8);
+
+		for (uint8_t bit = 8; bit > 0; --bit) {
+			if (remainder & TOPBIT) {
+				remainder = (remainder << 1) ^ POLYNOMIAL;
+			} else {
+				remainder = (remainder << 1);
+			}
+		}
+
+		crcTable[dividend] = remainder;
+	}
+
 }
 
 //an algorithm to turn the transmit character into manchester levels
@@ -50,8 +76,8 @@ void encode() {
 			//invert for first half of bit period
 			tx_buffer[idx] = (~((char_buffer[i] & (1 << j)) >> j)) & 0b1;
 			//transition during second half of bit period
-			tx_buffer[idx+1] = ((char_buffer[i] & (1 << j)) >> j);
-			idx+=2;
+			tx_buffer[idx + 1] = ((char_buffer[i] & (1 << j)) >> j);
+			idx += 2;
 		}
 	}
 }
@@ -60,33 +86,36 @@ void tx() {
 	//make sure count is at 0
 	tx_count = 0;
 
+	//set the transmit start flag
+	tx_start = 1;
+
 	//enable the transmit timer
 	*(TIM6_CR1 ) |= (1 << TIM6_CEN);
 }
 
 //repeatedly send data so we can test collision stopping
 /*void collision_test()
-{
-	tx_count = 0;
-	//enable the transmit timer
-	*(TIM6_CR1 ) |= (1 << TIM6_CEN);
-	while(1)
-	{
-		if(tx_count == (bytes * CHAR_SIZE * 2))
-		{
-			tx_count = 0;
-			//enable the transmit timer
-			*(TIM6_CR1 ) |= (1 << TIM6_CEN);
-		}
-	}
-}*/
+ {
+ tx_count = 0;
+ //enable the transmit timer
+ *(TIM6_CR1 ) |= (1 << TIM6_CEN);
+ while(1)
+ {
+ if(tx_count == (bytes * CHAR_SIZE * 2))
+ {
+ tx_count = 0;
+ //enable the transmit timer
+ *(TIM6_CR1 ) |= (1 << TIM6_CEN);
+ }
+ }
+ }*/
 
 extern void TIM6_DAC_IRQHandler() {
 	//clear the pending IRQ bit
-	*(TIM6_SR) &= ~(1 << TIM6_UIF);
+	*(TIM6_SR ) &= ~(1 << TIM6_UIF);
 
 	//clear the pending IRQ in NVIC
-	*(NVIC_ICPR1) |= (1 << TIM6_ICPR_CLR);
+	*(NVIC_ICPR1 ) |= (1 << TIM6_ICPR_CLR);
 
 	//if still transmitting
 	if (tx_count < (bytes * CHAR_SIZE * 2)) {
@@ -94,10 +123,9 @@ extern void TIM6_DAC_IRQHandler() {
 		//here we set the BSRR to whatever is in the tx register
 		//*(GPIOB_BSRR) = (1 << (PB15 + 16)) | (tx_buffer[tx_count++] << PB15);
 		if (tx_buffer[tx_count]) {
-			*(GPIOB_BSRR) = 1 << PB15;
-		}
-		else {
-			*(GPIOB_BSRR) = 1 << (PB15 + 16);
+			*(GPIOB_BSRR ) = 1 << PB15;
+		} else {
+			*(GPIOB_BSRR ) = 1 << (PB15 + 16);
 		}
 		tx_count++;
 	} else if (tx_count == (bytes * CHAR_SIZE * 2)) {
@@ -110,17 +138,20 @@ extern void TIM6_DAC_IRQHandler() {
 		//set full transmit complete flag
 		full_tx = true;
 
+		//clear transmit start flag
+		tx_start = false;
+
 		//clear bit
-		*(GPIOB_BSRR) = 1 << PB15;
+		*(GPIOB_BSRR ) = 1 << PB15;
 	}
 }
 
 void TIM7_IRQHandler(void) {
 	//clear the pending status
-	*(TIM7_SR) &= ~(1 << TIM7_UIF);
+	*(TIM7_SR ) &= ~(1 << TIM7_UIF);
 
 	//disable TIM7
-	*(TIM7_CR1) &= ~(1 << TIM7_CEN);
+	*(TIM7_CR1 ) &= ~(1 << TIM7_CEN);
 
 	//enable the transmit timer
 	*(TIM6_CR1 ) |= (1 << TIM6_CEN);

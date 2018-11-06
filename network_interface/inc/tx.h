@@ -10,6 +10,14 @@
 
 #include <stdbool.h>
 
+typedef uint8_t CRC;
+CRC crcTable[256];
+#define WIDTH  (8 * sizeof(CRC))
+#define TOPBIT (1 << (WIDTH - 1))
+
+//0b100000111
+#define POLYNOMIAL 0x107
+
 //temporary size of character buffer
 #define BUFFER_SIZE 500
 
@@ -26,6 +34,9 @@ char char_buffer[BUFFER_SIZE];
 
 //backoff flag
 bool backoff;
+
+//transmit start flag
+bool tx_start;
 
 //holds the breakout of bits from transmit characters
 bool tx_buffer[CHAR_SIZE * BUFFER_SIZE * 2];
@@ -46,6 +57,7 @@ bool full_tx;
 uint8_t tx_get_input();
 void tx();
 void encode();
+void crc();
 void collision_test();
 
 #endif /* TX_H_ */

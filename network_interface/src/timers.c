@@ -41,6 +41,9 @@ void timer_6_init() {
 	//initialize timeout count
 	try_count = 0;
 
+	//initialize transmit start flag
+	tx_start = false;
+
 	//initialize full transmit flag
 	full_tx = false;
 
