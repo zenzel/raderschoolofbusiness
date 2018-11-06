@@ -38,6 +38,12 @@ void timer_7_init() {
 }
 
 void timer_6_init() {
+	//initialize timeout count
+	try_count = 0;
+
+	//initialize full transmit flag
+	full_tx = false;
+
 	//enable timer clock
 	*(RCC_APB1ENR) |= (1 << TIM6_APB1ENR);
 

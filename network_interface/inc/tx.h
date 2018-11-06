@@ -36,6 +36,12 @@ int tx_count;
 uint32_t wait_time_reload;
 bool waiting;
 
+//timeout counter
+uint8_t try_count;
+
+//flag to see if message has been fully transmitted in the past
+bool full_tx;
+
 
 uint8_t tx_get_input();
 void tx();

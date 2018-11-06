@@ -104,6 +104,12 @@ extern void TIM6_DAC_IRQHandler() {
 		//turn off TIM6 because we are done transmitting
 		*(TIM6_CR1 ) &= ~(1 << TIM6_CEN);
 
+		//clear timeout count
+		try_count = 0;
+
+		//set full transmit complete flag
+		full_tx = true;
+
 		//clear bit
 		*(GPIOB_BSRR) = 1 << PB15;
 	}

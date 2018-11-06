@@ -104,8 +104,11 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 
 			//set the line idle
 			*(GPIOB_BSRR) = 1 << PB15;
-			if(backoff == false)
+			if(!full_tx && !backoff && (try_count < 10))
 			{
+				//increment timeout count. stops at 10 attempts.
+				try_count++;
+
 				backoff = true;
 				//reset receive variables
 				counted_edges = 0;
