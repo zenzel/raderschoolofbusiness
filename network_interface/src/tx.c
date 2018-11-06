@@ -28,6 +28,8 @@ uint8_t tx_get_input() {
 		crc_en = 1;
 	}
 
+	printf("Enter string to transmit:\n\r");
+
 	char c;
 	while ((c = usart2_getch() != ENTER_PRESS) && (bytes < 254)) {
 		char_buffer[bytes++] = c;

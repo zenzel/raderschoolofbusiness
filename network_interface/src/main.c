@@ -31,18 +31,18 @@ int main() {
 		if (choice == 't') {
 			tx_get_input();
 			tx();
-		} else if (choice == 'r') {
-			//wait for full message to come in
-			while(!parse_flag);
-			rx_parse();
-			//reset receive variables
-			counted_edges = 0;
-			bit_count = 0;
-			length = 0;
-			parse_flag = 0;
-			state = 0;
-			edge_delta_sum = 0;
-			printf("\r\n");
+		}
+		//wait for full message to come in
+		while(!parse_flag);
+		rx_parse();
+		//reset receive variables
+		counted_edges = 0;
+		bit_count = 0;
+		length = 0;
+		parse_flag = 0;
+		state = 0;
+		edge_delta_sum = 0;
+		printf("\r\n");
 		}
 	}
 }
