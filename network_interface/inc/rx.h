@@ -27,6 +27,7 @@ bool rx_buffer[2048];
 char rx_chars[256];
 
 void rx_parse();
+uint8_t crc_rx(char const message[], int nBytes);
 
 
 #endif /* RX_H_ */

@@ -5,6 +5,7 @@
  * @brief Source file for CE4951 receiver milestone.
  */
 
+#include "tx.h"
 #include "rx.h"
 #include "timers.h"
 #include "uart_driver.h"
@@ -69,12 +70,38 @@ void rx_parse() {
 		char_count++;
 	}
 
+	uint8_t check = crc_rx(rx_chars, (char_count - 1));
+
 	for(int i = 0; i <= char_count; i++) {
 		usart2_putch(rx_chars[i]);
+	}
+
+	if(!(check ^= rx_chars[char_count - 1])) {
+		usart2_putch('P');
+	} else {
+		usart2_putch('F');
 	}
 
 	parse_flag = 0;
 
 	//clear the bit count
 	bit_count = 0;
+}
+
+//crc algorithm (reference: https://barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code)
+CRC crc_rx(char const message[], int nBytes) {
+	CRC remainder = 0;
+
+	for (int byte = 5; byte < nBytes; ++byte) {
+		remainder ^= (message[byte] << (WIDTH - 8));
+
+		for (uint8_t bit = 8; bit > 0; --bit) {
+			if (remainder & TOPBIT) {
+				remainder = (remainder << 1) ^ POLYNOMIAL;
+			} else {
+				remainder = (remainder << 1);
+			}
+		}
+	}
+	return (remainder);
 }
