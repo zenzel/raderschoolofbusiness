@@ -46,6 +46,10 @@ uint8_t crc(uint8_t const message) {
 	uint8_t remainder;
 	remainder = message;
 
+<<<<<<< HEAD
+}
+
+=======
 	for (uint8_t bit = 8; bit > 0; --bit) {
 		if (remainder & 0x80) {
 			remainder ^= POLYNOMIAL;
@@ -58,6 +62,7 @@ uint8_t crc(uint8_t const message) {
 }
 
 
+>>>>>>> 40d998d86aa275184b4371ee1c1f55a02489de0e
 //an algorithm to turn the transmit character into manchester levels
 void encode() {
 	//first loop iterates through all bytes stored in the character buffer

@@ -42,21 +42,28 @@ uint8_t tx_get_input() {
 }
 
 //crc algorithm (reference: https://barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code)
-uint8_t crc(uint8_t const message) {
-	uint8_t remainder;
-	remainder = message;
+void crc() {
 
-	for (uint8_t bit = 8; bit > 0; --bit) {
-		if (remainder & 0x80) {
-			remainder ^= POLYNOMIAL;
-		}
-
-		remainder = (remainder << 1);
-	}
-
-	return (remainder >> 4);
 }
 
+void crcInit(void) {
+	CRC remainder;
+
+	for (int dividend = 0; dividend < 256; ++dividend) {
+		remainder = dividend << (WIDTH - 8);
+
+		for (uint8_t bit = 8; bit > 0; --bit) {
+			if (remainder & TOPBIT) {
+				remainder = (remainder << 1) ^ POLYNOMIAL;
+			} else {
+				remainder = (remainder << 1);
+			}
+		}
+
+		crcTable[dividend] = remainder;
+	}
+
+}
 
 //an algorithm to turn the transmit character into manchester levels
 void encode() {
