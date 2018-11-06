@@ -26,9 +26,9 @@ uint8_t tx_get_input() {
 	//add version to header
 	char_buffer[1] = 0x01;
 	//add source to header
-	char_buffer[2] = 0x00;
+	char_buffer[2] = 0x05;
 	//add destination to header
-	char_buffer[3] = 0x11;
+	char_buffer[3] = 0x00;
 	//add length to header
 	//usually this would be (bytes - 1), but (-1) taken off for CRC byte addition
 	char_buffer[4] = (bytes++) & 0xFF;
