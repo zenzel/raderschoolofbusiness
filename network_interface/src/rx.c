@@ -77,9 +77,9 @@ void rx_parse() {
 	}
 
 	if(!(check ^= rx_chars[char_count - 1])) {
-		usart2_putch('P');
+		printf("CRC Check PASS\n\r");
 	} else {
-		usart2_putch('F');
+		printf("CRC Check FAIL\n\r");
 	}
 
 	parse_flag = 0;

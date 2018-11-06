@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <timers.h>
 #include <timers.h>
+#include <stdio.h>
 #include "channel_monitor.h"
 #include "uart_driver.h"
 #include "tx.h"
@@ -21,27 +22,18 @@ int main() {
 	systick_init();
 	usart2_init(DEFAULT_BAUD, F_CPU);
 
-	//tx or rx
-	usart2_putch('t');
-	usart2_putch('/');
-	usart2_putch('r');
-	usart2_putch('?');
-	usart2_putch('\n');
-	usart2_putch('\r');
-	char choice = usart2_getch();
-
-	if(choice == 't') {
-		usart2_putch('t');
-		usart2_putch(':');
-		usart2_putch(' ');
-		tx_get_input();
-		tx();
-	}
-
-	//collision_test();
 	parse_flag = 0;
-	while(1) {
-		if(parse_flag) {
+	char choice;
+	while (1) {
+		//tx or rx
+		printf("\n\rPress (t) for transmit or (r) for receive.\n\r");
+		choice = usart2_getch();
+		if (choice == 't') {
+			tx_get_input();
+			tx();
+		} else if (choice == 'r') {
+			//wait for full message to come in
+			while(!parse_flag);
 			rx_parse();
 			//reset receive variables
 			counted_edges = 0;
@@ -50,6 +42,7 @@ int main() {
 			parse_flag = 0;
 			state = 0;
 			edge_delta_sum = 0;
+			printf("\r\n");
 		}
 	}
 }

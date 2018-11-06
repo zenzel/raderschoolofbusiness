@@ -102,21 +102,23 @@ extern void TIM8_BRK_TIM12_IRQHandler() {
 			*(GPIOA_BSRR ) = (1 << PA12) | (1 << (PA11 + 16))
 					| (1 << (PA10 + 16));
 
+			//reset receive variables
+			counted_edges = 0;
+			bit_count = 0;
+			length = 0;
+			parse_flag = 0;
+			state = 0;
+			edge_delta_sum = 0;
+
 			//set the line idle
 			*(GPIOB_BSRR) = 1 << PB15;
+
 			if(!full_tx && !backoff && tx_start && (try_count < 10))
 			{
 				//increment timeout count. stops at 10 attempts.
 				try_count++;
 
 				backoff = true;
-				//reset receive variables
-				counted_edges = 0;
-				bit_count = 0;
-				length = 0;
-				parse_flag = 0;
-				state = 0;
-				edge_delta_sum = 0;
 
 				//clear transmit count
 				tx_count = 0;

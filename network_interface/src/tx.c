@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "timers.h"
 #include "tx.h"
 #include "uart_driver.h"
@@ -16,9 +17,19 @@ uint8_t tx_get_input() {
 	//how many bytes will be sent
 	bytes = 6;
 
-	//for now let;s limit the transmission to 5 bytes
+	printf("Enter the destination address in hex (0x##): 0x");
+	char addr0 = usart2_getch();
+	char addr1 = usart2_getch();
+
+	printf("\r\nEnable CRC FCS (y)/(n)?\n\r");
+	char crc_c = usart2_getch();
+	uint8_t crc_en = 0;
+	if(crc_c == ENTER_PRESS || crc_c == 'y') {
+		crc_en = 1;
+	}
+
 	char c;
-	while ((c = usart2_getch()) != ENTER_PRESS) {
+	while ((c = usart2_getch() != ENTER_PRESS) && (bytes < 254)) {
 		char_buffer[bytes++] = c;
 	}
 	//add synch bits to header
@@ -26,17 +37,22 @@ uint8_t tx_get_input() {
 	//add version to header
 	char_buffer[1] = 0x01;
 	//add source to header
-	char_buffer[2] = 0x00;
+	char_buffer[2] = 0x06;
 	//add destination to header
-	char_buffer[3] = 0x11;
+	char_buffer[3] = (addr0 << 4) | addr1;
+	//add CRC flag to header
+	char_buffer[5] = (char)crc_en;
 	//add length to header
 	//usually this would be (bytes - 1), but (-1) taken off for CRC byte addition
 	char_buffer[4] = (bytes++) & 0xFF;
-	//add CRC flag to header
-	char_buffer[5] = 0x01;
+
 	//add CRC trailer before data is encoded
-	uint8_t temp = crc(char_buffer, (bytes - 1));
-	char_buffer[bytes - 1] = (char) temp;
+	if(crc_en) {
+		uint8_t temp = crc(char_buffer, (bytes - 1));
+		char_buffer[bytes - 1] = (char) temp;
+	} else {
+		char_buffer[bytes - 1] = 0xAA;
+	}
 	encode();
 	tx();
 	return bytes;
