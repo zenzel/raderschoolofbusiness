@@ -31,32 +31,34 @@ uint8_t tx_get_input() {
 	char_buffer[3] = 0x11;
 	//add length to header
 	//usually this would be (bytes - 1), but (-1) taken off for CRC byte addition
-	char_buffer[4] = (bytes) & 0xFF;
+	char_buffer[4] = (bytes++) & 0xFF;
 	//add CRC flag to header
 	char_buffer[5] = 0x01;
-	//add CRC trailer before data is encoded (0xAA placeholder)
-	char_buffer[bytes++] = 0xAA;
+	//add CRC trailer before data is encoded
+	uint8_t temp = crc(char_buffer, (bytes - 1));
+	char_buffer[bytes - 1] = (char) temp;
 	encode();
 	tx();
 	return bytes;
 }
 
 //crc algorithm (reference: https://barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code)
-uint8_t crc(uint8_t const message) {
-	uint8_t remainder;
-	remainder = message;
+CRC crc(char const message[], int nBytes) {
+	CRC remainder = 0;
 
-	for (uint8_t bit = 8; bit > 0; --bit) {
-		if (remainder & 0x80) {
-			remainder ^= POLYNOMIAL;
+	for (int byte = 6; byte < nBytes; ++byte) {
+		remainder ^= (message[byte] << (WIDTH - 8));
+
+		for (uint8_t bit = 8; bit > 0; --bit) {
+			if (remainder & TOPBIT) {
+				remainder = (remainder << 1) ^ POLYNOMIAL;
+			} else {
+				remainder = (remainder << 1);
+			}
 		}
-
-		remainder = (remainder << 1);
 	}
-
-	return (remainder >> 4);
+	return (remainder);
 }
-
 
 //an algorithm to turn the transmit character into manchester levels
 void encode() {

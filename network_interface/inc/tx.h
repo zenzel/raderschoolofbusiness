@@ -11,12 +11,11 @@
 #include <stdbool.h>
 
 typedef uint8_t CRC;
-CRC crcTable[256];
 #define WIDTH  (8 * sizeof(CRC))
 #define TOPBIT (1 << (WIDTH - 1))
 
 //0b100000111
-#define POLYNOMIAL 0x107
+#define POLYNOMIAL 0x07
 
 //temporary size of character buffer
 #define BUFFER_SIZE 500
@@ -57,7 +56,7 @@ bool full_tx;
 uint8_t tx_get_input();
 void tx();
 void encode();
-void crc();
+CRC crc(char const message[], int nBytes);
 void collision_test();
 
 #endif /* TX_H_ */
